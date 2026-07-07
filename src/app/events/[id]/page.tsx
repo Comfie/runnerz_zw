@@ -1,10 +1,21 @@
 import Image from "next/image"
 import Link from "next/link"
+import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { getEvent } from "@/lib/events"
 import { getCountdownLabel } from "@/lib/countdown"
+import { ShareButtons } from "@/components/ShareButtons"
 
 export const dynamic = "force-dynamic"
+
+const EVENT_TYPE_LABEL: Record<string, string> = {
+  ROAD: "Road",
+  TRAIL: "Trail",
+  ULTRA: "Ultra",
+  RELAY: "Relay",
+  CHARITY: "Charity",
+  KIDS: "Kids",
+}
 
 export default async function EventPage({
   params,
@@ -15,15 +26,24 @@ export default async function EventPage({
   const e = await getEvent(id)
   if (!e || e.status !== "PUBLISHED") notFound()
 
+  const host = (await headers()).get("host") ?? ""
+  const proto = host.startsWith("localhost") ? "http" : "https"
+  const eventUrl = `${proto}://${host}/events/${e.id}`
+
   const now = new Date()
   const isPast = e.startsAt < now
+  const isRegistrationClosed =
+    isPast || (e.registrationDeadline !== null && e.registrationDeadline < now)
   const countdown = getCountdownLabel(e.startsAt)
+  const deadlineCountdown = e.registrationDeadline
+    ? getCountdownLabel(e.registrationDeadline)
+    : null
 
   return (
     <main className="app-container pt-5 sm:pt-8 pb-24 lg:py-8">
       {/* Hero */}
       <section className="relative min-h-[45vh] overflow-hidden rounded-[1.75rem]">
-        {e.coverImageUrl ? (
+        {e.coverImageUrl && /^https?:\/\/|^\//.test(e.coverImageUrl) ? (
           <Image
             src={e.coverImageUrl}
             alt={e.title}
@@ -40,6 +60,11 @@ export default async function EventPage({
             <span className="inline-flex rounded-full bg-[rgba(8,127,123,0.85)] px-3 py-1 text-xs font-bold text-white">
               {e.locationText}
             </span>
+            {e.eventType && (
+              <span className="inline-flex rounded-full bg-[rgba(8,127,123,0.85)] px-3 py-1 text-xs font-bold text-white">
+                {EVENT_TYPE_LABEL[e.eventType] ?? e.eventType}
+              </span>
+            )}
             {!isPast && countdown && (
               <span className="inline-flex rounded-full bg-[rgba(242,184,75,0.9)] px-3 py-1 text-xs font-bold text-[color:var(--foreground)]">
                 {countdown}
@@ -71,10 +96,21 @@ export default async function EventPage({
             </p>
           </div>
 
+          {e.logistics && (
+            <div className="surface rounded-[1.5rem] p-5 sm:p-6">
+              <h2 className="text-lg font-black">Race day info</h2>
+              <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[color:var(--muted)]">
+                {e.logistics}
+              </p>
+            </div>
+          )}
+
           {e.lat !== null && e.lng !== null && (
             <div className="surface rounded-[1.5rem] p-5 sm:p-6">
               <h2 className="text-lg font-black">Location</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">{e.locationText}</p>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                {e.locationText}
+              </p>
               <a
                 href={`https://maps.google.com/?q=${e.lat},${e.lng}`}
                 target="_blank"
@@ -89,7 +125,7 @@ export default async function EventPage({
           <div className="surface rounded-[1.5rem] p-5 sm:p-6">
             <h2 className="text-lg font-black">Organised by</h2>
             <div className="mt-3 flex items-center gap-3">
-              {e.club.logoUrl && (
+              {e.club.logoUrl && /^https?:\/\/|^\//.test(e.club.logoUrl) && (
                 <Image
                   src={e.club.logoUrl}
                   width={48}
@@ -100,7 +136,9 @@ export default async function EventPage({
               )}
               <div>
                 <p className="font-bold">{e.club.name}</p>
-                <p className="text-sm text-[color:var(--muted)]">{e.club.contact}</p>
+                <p className="text-sm text-[color:var(--muted)]">
+                  {e.club.contact}
+                </p>
               </div>
             </div>
           </div>
@@ -135,7 +173,43 @@ export default async function EventPage({
                 </span>
               ))}
             </div>
-            {isPast ? (
+
+            {e.registrationDeadline && (
+              <div className="mt-4 text-xs text-[color:var(--muted)]">
+                {isRegistrationClosed ? (
+                  <p className="font-bold">Registration closed</p>
+                ) : (
+                  <>
+                    <p>
+                      Registration closes{" "}
+                      {e.registrationDeadline.toLocaleDateString([], {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                    {deadlineCountdown && (
+                      <span className="mt-1 inline-flex rounded-full bg-[rgba(220,38,38,0.12)] px-2 py-0.5 text-xs font-bold text-red-700">
+                        Closes {deadlineCountdown.toLowerCase()}
+                      </span>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
+            {e.expectedRunners !== null && (
+              <p className="mt-3 text-xs text-[color:var(--muted)]">
+                ~{e.expectedRunners.toLocaleString()} runners expected
+              </p>
+            )}
+            {e.hasFinisherMedal && (
+              <p className="mt-1 text-xs text-[color:var(--muted)]">
+                ★ Finisher medal awarded
+              </p>
+            )}
+
+            {isRegistrationClosed ? (
               <p className="mt-5 text-center text-sm text-[color:var(--muted)]">
                 Registration closed
               </p>
@@ -147,16 +221,14 @@ export default async function EventPage({
                 Register
               </Link>
             )}
-            <p className="mt-4 text-center text-xs text-[color:var(--muted)]">
-              Share: /events/{e.id}
-            </p>
+            <ShareButtons url={eventUrl} title={e.title} />
           </div>
         </aside>
       </div>
 
       {/* Mobile sticky register bar */}
       <div className="fixed bottom-0 left-0 right-0 border-t border-[color:var(--line)] bg-[rgba(251,252,248,0.92)] px-4 py-3 backdrop-blur lg:hidden">
-        {isPast ? (
+        {isRegistrationClosed ? (
           <p className="text-center text-sm text-[color:var(--muted)]">
             Registration closed
           </p>
