@@ -1,20 +1,29 @@
-import { createEvent } from "./actions";
+import { createEvent } from "./actions"
 
 export default function NewEvent() {
   return (
     <main className="app-container py-5 sm:py-8">
       <section className="surface mx-auto max-w-2xl rounded-[1.5rem] p-5 sm:p-7">
-      <h1 className="text-2xl font-black">New event</h1>
-      <EventForm action={createEvent} />
+        <h1 className="text-2xl font-black">New event</h1>
+        <EventForm action={createEvent} />
       </section>
     </main>
-  );
+  )
 }
 
 function EventForm({ action }: { action: (formData: FormData) => void }) {
   return (
     <form action={action} className="mt-4 space-y-3">
       <input name="title" placeholder="Title" required className="field" />
+      <select name="eventType" required className="field">
+        <option value="">Select type</option>
+        <option value="ROAD">Road</option>
+        <option value="TRAIL">Trail</option>
+        <option value="ULTRA">Ultra</option>
+        <option value="RELAY">Relay</option>
+        <option value="CHARITY">Charity</option>
+        <option value="KIDS">Kids</option>
+      </select>
       <textarea
         name="description"
         placeholder="Description"
@@ -25,6 +34,11 @@ function EventForm({ action }: { action: (formData: FormData) => void }) {
         name="startsAt"
         type="datetime-local"
         required
+        className="field"
+      />
+      <input
+        name="registrationDeadline"
+        type="datetime-local"
         className="field"
       />
       <input
@@ -40,6 +54,17 @@ function EventForm({ action }: { action: (formData: FormData) => void }) {
         className="field"
       />
       <input
+        name="expectedRunners"
+        type="number"
+        min="1"
+        placeholder="Expected runners (optional)"
+        className="field"
+      />
+      <label className="flex items-center gap-2 text-sm font-bold">
+        <input type="checkbox" name="hasFinisherMedal" />
+        Finisher medal awarded
+      </label>
+      <input
         name="coverImageUrl"
         placeholder="Cover image URL"
         className="field"
@@ -50,9 +75,12 @@ function EventForm({ action }: { action: (formData: FormData) => void }) {
         required
         className="field min-h-24"
       />
-      <button className="button-primary">
-        Save
-      </button>
+      <textarea
+        name="logistics"
+        placeholder="Parking, bag storage, water points, cut-off times, medical support... (optional)"
+        className="field min-h-24"
+      />
+      <button className="button-primary">Save</button>
     </form>
-  );
+  )
 }
