@@ -1,6 +1,6 @@
 export function EventFilters({ distances }: { distances: string[] }) {
   return (
-    <form className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.1fr_0.9fr_0.8fr_auto]" method="get">
+    <form className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr_0.8fr_auto]" method="get">
       <label>
         <span className="field-label">Location</span>
         <input name="location" placeholder="Harare, Bulawayo..." className="field" />
@@ -20,7 +20,7 @@ export function EventFilters({ distances }: { distances: string[] }) {
           ))}
         </select>
       </label>
-      <button className="button-primary mt-1 w-full self-end sm:col-span-2 lg:col-span-1">
+      <button className="button-primary mt-1 w-full self-end lg:col-span-1">
         Filter events
       </button>
     </form>
