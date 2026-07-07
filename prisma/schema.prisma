@@ -53,6 +53,15 @@ model Club {
   createdAt DateTime @default(now())
 }
 
+enum EventType {
+  ROAD
+  TRAIL
+  ULTRA
+  RELAY
+  CHARITY
+  KIDS
+}
+
 model Event {
   id              String         @id @default(cuid())
   title           String
@@ -63,6 +72,11 @@ model Event {
   lng             Float?
   distanceOptions String[]
   coverImageUrl   String?
+  eventType       EventType?
+  logistics       String?
+  registrationDeadline DateTime?
+  expectedRunners Int?
+  hasFinisherMedal Boolean    @default(false)
   paymentInfo     String
   status          EventStatus    @default(DRAFT)
   clubId          String
