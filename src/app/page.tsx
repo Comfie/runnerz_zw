@@ -8,7 +8,12 @@ export const dynamic = "force-dynamic"
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ location?: string; distance?: string; from?: string }>
+  searchParams: Promise<{
+    location?: string
+    distance?: string
+    from?: string
+    eventType?: string
+  }>
 }) {
   const sp = await searchParams
   const [events, distances] = await Promise.all([
@@ -16,6 +21,7 @@ export default async function Home({
       location: sp.location,
       distance: sp.distance,
       from: sp.from ? new Date(sp.from) : undefined,
+      eventType: sp.eventType,
     }),
     listPublishedDistanceOptions(),
   ])
@@ -40,7 +46,8 @@ export default async function Home({
             Every finish line starts with one decision.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-white/80 sm:text-lg">
-            Discover running events across Zimbabwe. Register in seconds, no password needed.
+            Discover running events across Zimbabwe. Register in seconds, no
+            password needed.
           </p>
           <a href="#races" className="button-primary mt-6 inline-flex">
             Browse races ↓
