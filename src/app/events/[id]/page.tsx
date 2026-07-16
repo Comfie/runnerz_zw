@@ -57,21 +57,21 @@ export default async function EventPage({
             priority
           />
         ) : (
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--teal)_0%,var(--teal-dark)_40%,var(--foreground)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--green)_0%,var(--green-dark)_40%,var(--foreground)_100%)]" />
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70" />
         <div className="absolute bottom-0 left-0 px-5 pb-6 sm:px-8 sm:pb-8">
           <div className="mb-3 flex flex-wrap gap-2">
-            <span className="inline-flex rounded-full bg-[rgba(8,127,123,0.85)] px-3 py-1 text-xs font-bold text-white">
+            <span className="inline-flex rounded-full bg-[rgba(30,142,62,0.85)] px-3 py-1 text-xs font-bold text-white">
               {e.locationText}
             </span>
             {e.eventType && (
-              <span className="inline-flex rounded-full bg-[rgba(8,127,123,0.85)] px-3 py-1 text-xs font-bold text-white">
+              <span className="inline-flex rounded-full bg-[rgba(30,142,62,0.85)] px-3 py-1 text-xs font-bold text-white">
                 {EVENT_TYPE_LABEL[e.eventType] ?? e.eventType}
               </span>
             )}
             {!isPast && countdown && (
-              <span className="inline-flex rounded-full bg-[rgba(242,184,75,0.9)] px-3 py-1 text-xs font-bold text-[color:var(--foreground)]">
+              <span className="inline-flex rounded-full bg-[rgba(242,183,5,0.9)] px-3 py-1 text-xs font-bold text-[color:var(--foreground)]">
                 {countdown}
               </span>
             )}
@@ -168,7 +168,7 @@ export default async function EventPage({
                 href={`https://maps.google.com/?q=${e.lat},${e.lng}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center text-sm font-bold text-[color:var(--teal-dark)]"
+                className="mt-3 inline-flex items-center text-sm font-bold text-[color:var(--green-dark)]"
               >
                 View on Google Maps →
               </a>
@@ -190,7 +190,7 @@ export default async function EventPage({
               <div>
                 <Link
                   href={`/clubs/${e.clubId}`}
-                  className="font-bold text-[color:var(--teal-dark)] hover:underline"
+                  className="font-bold text-[color:var(--green-dark)] hover:underline"
                 >
                   {e.club.name}
                 </Link>

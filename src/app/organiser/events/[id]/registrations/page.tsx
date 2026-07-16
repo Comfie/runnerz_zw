@@ -32,7 +32,7 @@ export default async function EventRegistrations({
       </div>
       <div className="mt-4 overflow-x-auto rounded-2xl border border-[color:var(--line)] bg-white/80">
         <table className="w-full text-left text-sm">
-          <thead className="bg-[rgba(8,127,123,0.08)]">
+          <thead className="bg-[rgba(30,142,62,0.08)]">
             <tr>
               <th className="p-2">Name</th>
               <th className="p-2">Contact</th>

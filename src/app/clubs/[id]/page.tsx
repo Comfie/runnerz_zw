@@ -28,14 +28,14 @@ export default async function ClubPage({
               className="rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--teal-dark)] text-2xl font-black text-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--green-dark)] text-2xl font-black text-white">
               {club.name.charAt(0)}
             </div>
           )}
           <div>
             <h1 className="flex items-center gap-2 text-2xl font-black">
               {club.name}
-              <span className="rounded-full bg-[rgba(8,127,123,0.1)] px-2 py-0.5 text-xs font-bold text-[color:var(--teal-dark)]">
+              <span className="rounded-full bg-[rgba(30,142,62,0.1)] px-2 py-0.5 text-xs font-bold text-[color:var(--green-dark)]">
                 ✓ Verified
               </span>
             </h1>

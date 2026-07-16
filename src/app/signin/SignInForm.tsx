@@ -16,7 +16,7 @@ export function SignInForm() {
 
   return (
     <>
-      <p className="mb-2 text-xs font-bold uppercase text-[color:var(--teal-dark)]">
+      <p className="mb-2 text-xs font-bold uppercase text-[color:var(--green-dark)]">
         Passwordless access
       </p>
       <h1 className="mb-2 text-2xl font-black">Sign in to RunZW</h1>
@@ -61,7 +61,7 @@ export function SignInForm() {
           Organising a race? Sign in the same way, then{" "}
           <Link
             href="/organiser/apply"
-            className="font-bold text-[color:var(--teal-dark)]"
+            className="font-bold text-[color:var(--green-dark)]"
           >
             apply to list your club&apos;s events
           </Link>

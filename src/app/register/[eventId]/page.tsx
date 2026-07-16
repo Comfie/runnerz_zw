@@ -41,7 +41,7 @@ export default async function Register({
   return (
     <main className="app-container py-5 sm:py-8">
       <section className="surface mx-auto max-w-xl rounded-[1.5rem] p-5 sm:p-7">
-        <p className="mb-2 text-xs font-bold uppercase text-[color:var(--teal-dark)]">
+        <p className="mb-2 text-xs font-bold uppercase text-[color:var(--green-dark)]">
           Choose your distance
         </p>
         <h1 className="text-2xl font-black leading-tight sm:text-3xl">
@@ -54,7 +54,7 @@ export default async function Register({
           {e.distanceOptions.map((d) => (
             <label
               key={d}
-              className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[color:var(--line)] bg-white/80 p-4 font-black transition hover:border-[color:var(--teal)]"
+              className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[color:var(--line)] bg-white/80 p-4 font-black transition hover:border-[color:var(--green)]"
             >
               <input type="radio" name="distance" value={d} required /> {d}
             </label>
@@ -63,7 +63,7 @@ export default async function Register({
             Confirm registration
           </button>
         </form>
-        <p className="mt-4 rounded-2xl bg-[rgba(242,184,75,0.18)] p-4 text-sm leading-6 text-[color:var(--muted)]">
+        <p className="mt-4 rounded-2xl bg-[rgba(242,183,5,0.18)] p-4 text-sm leading-6 text-[color:var(--muted)]">
           Payment: {e.paymentInfo}
         </p>
       </section>

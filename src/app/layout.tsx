@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { AppHeader } from "@/components/AppHeader";
+import { AppFooter } from "@/components/AppFooter";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#087f7b",
+  themeColor: "#1e8e3e",
 };
 
 export default function RootLayout({
@@ -35,7 +36,8 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <AppHeader />
-        {children}
+        <div className="flex-1">{children}</div>
+        <AppFooter />
       </body>
     </html>
   );

@@ -19,14 +19,16 @@ export async function AppHeader() {
   const items = getHeaderNavigation(user ?? null, club);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-[color:var(--line)] bg-[rgba(251,252,248,0.86)] backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-[color:var(--line)] bg-white">
       <nav className="app-container flex min-h-16 items-center justify-between gap-3 py-3 text-sm">
         <Link className="flex items-center gap-2 font-bold" href="/">
-          <span className="grid size-9 place-items-center rounded-full bg-[color:var(--teal)] text-sm font-black text-white shadow-sm">
+          <span className="grid size-9 place-items-center rounded-full bg-[color:var(--green)] text-sm font-black text-white shadow-sm">
             RZ
           </span>
           <span>RunZW</span>
         </Link>
+        {/* Reserved for future primary nav (Events, Services, Leaderboards...) */}
+        <div className="hidden items-center gap-6 lg:flex" />
         <MobileMenu items={items} signedIn={Boolean(user)} />
         <div className="hidden flex-col gap-2 sm:flex sm:items-end">
           {user && (

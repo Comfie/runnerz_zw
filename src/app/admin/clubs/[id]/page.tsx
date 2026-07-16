@@ -46,7 +46,7 @@ export default async function AdminClubPage({
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="mb-2 text-xs font-bold uppercase text-[color:var(--teal-dark)]">
+            <p className="mb-2 text-xs font-bold uppercase text-[color:var(--green-dark)]">
               Club details
             </p>
             <h1 className="text-2xl font-black sm:text-3xl">{club.name}</h1>
@@ -56,7 +56,7 @@ export default async function AdminClubPage({
             <span className={`w-fit rounded-full px-3 py-1 text-xs font-bold ${
               club.verified
                 ? "bg-emerald-100 text-emerald-700"
-                : "bg-[rgba(242,184,75,0.24)] text-[color:var(--foreground)]"
+                : "bg-[rgba(242,183,5,0.24)] text-[color:var(--foreground)]"
             }`}>
               {club.verified ? "Approved" : "Pending approval"}
             </span>
@@ -69,15 +69,15 @@ export default async function AdminClubPage({
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-2xl bg-[rgba(8,127,123,0.1)] p-4">
+          <div className="rounded-2xl bg-[rgba(30,142,62,0.1)] p-4">
             <p className="text-2xl font-black">{club._count.events}</p>
             <p className="text-xs font-bold uppercase text-[color:var(--muted)]">Events</p>
           </div>
-          <div className="rounded-2xl bg-[rgba(242,184,75,0.18)] p-4">
+          <div className="rounded-2xl bg-[rgba(242,183,5,0.18)] p-4">
             <p className="text-2xl font-black">{club._count.members}</p>
             <p className="text-xs font-bold uppercase text-[color:var(--muted)]">Members</p>
           </div>
-          <div className="rounded-2xl bg-[rgba(230,86,63,0.1)] p-4">
+          <div className="rounded-2xl bg-[rgba(210,38,47,0.1)] p-4">
             <p className="text-2xl font-black">{totalRegistrations}</p>
             <p className="text-xs font-bold uppercase text-[color:var(--muted)]">Registrations</p>
           </div>
@@ -111,7 +111,7 @@ export default async function AdminClubPage({
                       {event.status === "PUBLISHED" ? "Live" : "Draft"}
                     </span>
                     {event.eventType && (
-                      <span className="rounded-full bg-[rgba(8,127,123,0.1)] px-2 py-0.5 text-[0.65rem] font-bold text-[color:var(--teal-dark)]">
+                      <span className="rounded-full bg-[rgba(30,142,62,0.1)] px-2 py-0.5 text-[0.65rem] font-bold text-[color:var(--green-dark)]">
                         {EVENT_TYPE_LABEL[event.eventType] ?? event.eventType}
                       </span>
                     )}

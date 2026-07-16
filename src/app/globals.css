@@ -5,19 +5,17 @@ html {
 }
 
 :root {
-  --background: #f2f7f0;
-  --foreground: #18201d;
-  --surface: #fbfcf8;
-  --surface-strong: #ffffff;
-  --line: #d8e2d7;
-  --muted: #60716b;
-  --teal: #087f7b;
-  --teal-dark: #075f5c;
-  --coral: #e6563f;
-  --mango: #f2b84b;
-  --leaf: #2f8f5b;
-  --shadow-soft: 0 18px 45px rgba(24, 32, 29, 0.1);
-  --shadow-card: 0 10px 30px rgba(24, 32, 29, 0.08);
+  --background: #f5f4ef;
+  --foreground: #14171a;
+  --surface: #ffffff;
+  --line: #e2e0d8;
+  --muted: #666b66;
+  --green: #1e8e3e;
+  --green-dark: #166b2f;
+  --gold: #f2b705;
+  --red: #d2262f;
+  --shadow-soft: 0 18px 45px rgba(20, 23, 26, 0.1);
+  --shadow-card: 0 10px 30px rgba(20, 23, 26, 0.08);
 }
 
 @theme inline {
@@ -33,21 +31,9 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  content: "";
-  background:
-    linear-gradient(135deg, rgba(8, 127, 123, 0.08) 0 1px, transparent 1px 80px),
-    radial-gradient(circle at 20% 8%, rgba(242, 184, 75, 0.2), transparent 28%),
-    linear-gradient(180deg, #f2f7f0 0%, #eef6f4 55%, #f8f5ec 100%);
-}
-
 ::selection {
-  color: #18201d;
-  background: #f2b84b;
+  color: var(--foreground);
+  background: var(--gold);
 }
 
 a,
@@ -55,7 +41,7 @@ button,
 input,
 select,
 textarea {
-  outline-color: var(--teal);
+  outline-color: var(--gold);
 }
 
 .app-container {
@@ -78,8 +64,8 @@ textarea {
 }
 
 .surface {
-  border: 1px solid rgba(24, 32, 29, 0.1);
-  background: rgba(251, 252, 248, 0.9);
+  border: 1px solid rgba(20, 23, 26, 0.1);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(12px);
 }
@@ -90,9 +76,9 @@ textarea {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: var(--teal);
+  background: var(--gold);
   padding: 0.625rem 1rem;
-  color: #ffffff;
+  color: var(--foreground);
   font-size: 0.875rem;
   font-weight: 700;
   transition:
@@ -102,8 +88,8 @@ textarea {
 }
 
 .button-primary:hover {
-  background: var(--teal-dark);
-  box-shadow: 0 10px 24px rgba(8, 127, 123, 0.24);
+  background: #d9a405;
+  box-shadow: 0 10px 24px rgba(242, 183, 5, 0.32);
   transform: translateY(-1px);
 }
 
@@ -112,19 +98,88 @@ textarea {
   min-height: 2.5rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
+  background: var(--foreground);
   padding: 0.5rem 0.875rem;
-  color: var(--foreground);
+  color: #ffffff;
   font-size: 0.875rem;
   font-weight: 650;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.button-secondary:hover {
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+
+.button-tertiary {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--green-dark);
+  padding: 0.5rem 0.875rem;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 650;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.button-tertiary:hover {
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+
+/* Small circular icon badge, meant to sit at the end of a button/link.
+   Not applied automatically by .button-primary/.button-secondary — many
+   compact utility buttons (Save, Approve, Upload...) reuse those classes
+   and don't want the extra glyph, so it's opt-in per call site. */
+.icon-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  line-height: 1;
+  transition: transform 160ms ease;
+}
+
+.icon-badge-dark {
+  background: var(--foreground);
+  color: #ffffff;
+}
+
+.icon-badge-light {
+  background: #ffffff;
+  color: var(--foreground);
+}
+
+.group:hover .icon-badge {
+  transform: translateX(2px);
 }
 
 .section-title {
   font-size: clamp(1.75rem, 1.25rem + 2vw, 3.5rem);
   line-height: 0.98;
   letter-spacing: 0;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 1.25rem + 3vw, 4.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.hero-title em {
+  color: var(--gold);
+  font-style: normal;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
 }
 
 .field-label {
@@ -134,6 +189,10 @@ textarea {
   font-size: 0.75rem;
   font-weight: 750;
   text-transform: uppercase;
+}
+
+.divider-dashed {
+  border-top: 1px dashed var(--line);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -159,6 +218,6 @@ textarea {
 }
 
 .field:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 4px rgba(8, 127, 123, 0.14);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(242, 183, 5, 0.22);
 }

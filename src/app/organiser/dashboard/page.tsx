@@ -25,7 +25,7 @@ export default async function Dashboard() {
       <div className="surface rounded-[1.5rem] p-5 sm:p-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="mb-2 text-xs font-bold uppercase text-[color:var(--teal-dark)]">
+            <p className="mb-2 text-xs font-bold uppercase text-[color:var(--green-dark)]">
               Club operations
             </p>
             <h1 className="text-2xl font-black">Organiser dashboard</h1>
@@ -57,7 +57,7 @@ export default async function Dashboard() {
                         {e.status === "PUBLISHED" ? "Live" : "Draft"}
                       </span>
                       {e.eventType && (
-                        <span className="rounded-full bg-[rgba(8,127,123,0.1)] px-2 py-0.5 text-[0.65rem] font-bold text-[color:var(--teal-dark)]">
+                        <span className="rounded-full bg-[rgba(30,142,62,0.1)] px-2 py-0.5 text-[0.65rem] font-bold text-[color:var(--green-dark)]">
                           {EVENT_TYPE_LABEL[e.eventType] ?? e.eventType}
                         </span>
                       )}

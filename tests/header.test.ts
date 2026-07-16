@@ -4,7 +4,7 @@ import { getHeaderNavigation } from "@/lib/header";
 describe("getHeaderNavigation", () => {
   it("shows only sign in for signed-out users", () => {
     expect(getHeaderNavigation(null, null)).toEqual([
-      { href: "/signin", label: "Sign in", variant: "primary" },
+      { href: "/signin", label: "Sign in", variant: "secondary" },
     ]);
   });
 

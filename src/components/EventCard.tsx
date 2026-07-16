@@ -40,9 +40,9 @@ export function EventCard({
   return (
     <Link
       href={`/events/${e.id}`}
-      className="group relative flex min-h-64 flex-col overflow-hidden rounded-[1.35rem] border border-[rgba(24,32,29,0.1)] bg-[color:var(--surface-strong)] p-4 shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
+      className="group relative flex min-h-64 flex-col overflow-hidden rounded-[1.5rem] border border-[rgba(20,23,26,0.1)] bg-[color:var(--surface)] p-4 shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
     >
-      <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,var(--teal),var(--mango),var(--coral))]" />
+      <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,var(--green),var(--gold),var(--red))]" />
 
       <div className="flex items-start justify-between gap-3 pt-2">
         {/* Date block */}
@@ -60,11 +60,11 @@ export function EventCard({
 
         {/* Top-right badges */}
         <div className="flex flex-col items-end gap-2">
-          <span className="rounded-full bg-[rgba(8,127,123,0.1)] px-3 py-1 text-xs font-bold text-[color:var(--teal-dark)]">
+          <span className="rounded-full bg-[rgba(30,142,62,0.1)] px-3 py-1 text-xs font-bold text-[color:var(--green-dark)]">
             {e.locationText}
           </span>
           {e.eventType && (
-            <span className="rounded-full bg-[rgba(8,127,123,0.1)] px-3 py-1 text-xs font-bold text-[color:var(--teal-dark)]">
+            <span className="rounded-full bg-[rgba(30,142,62,0.1)] px-3 py-1 text-xs font-bold text-[color:var(--green-dark)]">
               {EVENT_TYPE_LABEL[e.eventType] ?? e.eventType}
             </span>
           )}
@@ -79,7 +79,7 @@ export function EventCard({
             </span>
           )}
           {!isRegistrationClosed && countdown && (
-            <span className="rounded-full bg-[rgba(242,184,75,0.18)] px-3 py-1 text-xs font-bold text-[color:var(--teal-dark)]">
+            <span className="rounded-full bg-[color:var(--gold)] px-3 py-1 text-xs font-bold text-[color:var(--foreground)]">
               {countdown}
             </span>
           )}
@@ -90,17 +90,22 @@ export function EventCard({
         {e.title}
       </h3>
       <p className="mt-1 text-xs text-[color:var(--muted)]">by {e.club.name}</p>
-      <p className="mt-2 text-sm text-[color:var(--muted)]">
-        {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-      </p>
-      {e.expectedRunners !== null && (
-        <p className="mt-1 text-xs text-[color:var(--muted)]">
-          ~{e.expectedRunners.toLocaleString()} runners expected
-        </p>
-      )}
-      {e.hasFinisherMedal && (
-        <p className="mt-1 text-xs text-[color:var(--muted)]">★ Finisher medal</p>
-      )}
+
+      <div className="divider-dashed mt-3 flex flex-wrap items-center gap-2 pt-3">
+        <span className="text-sm text-[color:var(--muted)]">
+          {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        </span>
+        {/* Reserved slot for a future registered-count / capacity badge
+            (e.g. "124/500") — expected-runners estimate stands in for now. */}
+        {e.expectedRunners !== null && (
+          <span className="rounded-full border border-[color:var(--line)] bg-white px-3 py-1 text-xs font-bold text-[color:var(--muted)]">
+            ~{e.expectedRunners.toLocaleString()} runners expected
+          </span>
+        )}
+        {e.hasFinisherMedal && (
+          <span className="text-xs text-[color:var(--muted)]">★ Finisher medal</span>
+        )}
+      </div>
 
       <div className="mt-auto flex flex-wrap gap-2 pt-6">
         {e.distanceOptions.map((distance) => (
@@ -113,9 +118,9 @@ export function EventCard({
         ))}
       </div>
 
-      <span className="mt-5 inline-flex items-center text-sm font-bold text-[color:var(--teal-dark)]">
+      <span className="mt-5 inline-flex items-center text-sm font-bold text-[color:var(--green-dark)]">
         View details
-        <span className="ml-2 transition group-hover:translate-x-1">→</span>
+        <span className="icon-badge icon-badge-dark">→</span>
       </span>
     </Link>
   )

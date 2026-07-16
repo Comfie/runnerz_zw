@@ -35,7 +35,7 @@ export default async function Me() {
     <main className="app-container py-5 sm:py-8 lg:py-10">
       {/* Header */}
       <section className="surface rounded-[1.5rem] p-5 sm:p-7">
-        <p className="mb-2 text-xs font-bold uppercase text-[color:var(--teal-dark)]">Runner dashboard</p>
+        <p className="mb-2 text-xs font-bold uppercase text-[color:var(--green-dark)]">Runner dashboard</p>
         <h1 className="text-2xl font-black sm:text-3xl">{user?.name ?? "My races"}</h1>
         {(user?.email ?? user?.phone) && (
           <p className="mt-1 text-sm text-[color:var(--muted)]">{user?.email ?? user?.phone}</p>
@@ -43,15 +43,15 @@ export default async function Me() {
 
         {/* Stats */}
         <div className="mt-5 grid grid-cols-3 gap-3">
-          <div className="rounded-2xl bg-[rgba(8,127,123,0.1)] p-4 text-center">
+          <div className="rounded-2xl bg-[rgba(30,142,62,0.1)] p-4 text-center">
             <p className="text-2xl font-black">{regs.length}</p>
             <p className="text-[0.65rem] font-bold uppercase text-[color:var(--muted)]">Races entered</p>
           </div>
-          <div className="rounded-2xl bg-[rgba(242,184,75,0.18)] p-4 text-center">
+          <div className="rounded-2xl bg-[rgba(242,183,5,0.18)] p-4 text-center">
             <p className="text-2xl font-black">{upcoming.length}</p>
             <p className="text-[0.65rem] font-bold uppercase text-[color:var(--muted)]">Upcoming</p>
           </div>
-          <div className="rounded-2xl bg-[rgba(230,86,63,0.1)] p-4 text-center">
+          <div className="rounded-2xl bg-[rgba(210,38,47,0.1)] p-4 text-center">
             <p className="text-2xl font-black">{past.length}</p>
             <p className="text-[0.65rem] font-bold uppercase text-[color:var(--muted)]">Completed</p>
           </div>
@@ -74,9 +74,9 @@ export default async function Me() {
                 <Link
                   key={r.id}
                   href={`/events/${r.event.id}`}
-                  className="group relative flex flex-col overflow-hidden rounded-[1.35rem] border border-[rgba(24,32,29,0.1)] bg-[color:var(--surface-strong)] p-5 shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
+                  className="group relative flex flex-col overflow-hidden rounded-[1.35rem] border border-[rgba(20,23,26,0.1)] bg-[color:var(--surface)] p-5 shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
                 >
-                  <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,var(--teal),var(--mango),var(--coral))]" />
+                  <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,var(--green),var(--gold),var(--red))]" />
                   <div className="mt-1 flex items-start justify-between gap-3">
                     {/* Date block */}
                     <div className="rounded-2xl bg-[color:var(--foreground)] px-3 py-2 text-center text-white">
@@ -92,14 +92,14 @@ export default async function Me() {
                     </div>
                     <div className="flex flex-col items-end gap-1.5">
                       {countdown && (
-                        <span className="rounded-full bg-[rgba(242,184,75,0.18)] px-3 py-1 text-xs font-bold text-[color:var(--teal-dark)]">
+                        <span className="rounded-full bg-[rgba(242,183,5,0.18)] px-3 py-1 text-xs font-bold text-[color:var(--green-dark)]">
                           {countdown}
                         </span>
                       )}
                       <span className={`rounded-full px-3 py-1 text-xs font-bold ${
                         r.status === "PAID"
                           ? "bg-emerald-100 text-emerald-700"
-                          : "bg-[rgba(8,127,123,0.1)] text-[color:var(--teal-dark)]"
+                          : "bg-[rgba(30,142,62,0.1)] text-[color:var(--green-dark)]"
                       }`}>
                         {r.status === "PAID" ? "✓ Paid" : "Registered"}
                       </span>
@@ -112,7 +112,7 @@ export default async function Me() {
                       {r.distance}
                     </span>
                     {r.event.eventType && (
-                      <span className="rounded-full bg-[rgba(8,127,123,0.08)] px-3 py-1 text-xs font-bold text-[color:var(--teal-dark)]">
+                      <span className="rounded-full bg-[rgba(30,142,62,0.08)] px-3 py-1 text-xs font-bold text-[color:var(--green-dark)]">
                         {EVENT_TYPE_LABEL[r.event.eventType] ?? r.event.eventType}
                       </span>
                     )}
@@ -123,7 +123,7 @@ export default async function Me() {
                   <p className="mt-3 text-xs text-[color:var(--muted)]">
                     {r.event.startsAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </p>
-                  <span className="mt-4 inline-flex items-center text-sm font-bold text-[color:var(--teal-dark)]">
+                  <span className="mt-4 inline-flex items-center text-sm font-bold text-[color:var(--green-dark)]">
                     View event
                     <span className="ml-1 transition group-hover:translate-x-1">→</span>
                   </span>
@@ -143,7 +143,7 @@ export default async function Me() {
               <Link
                 key={r.id}
                 href={`/events/${r.event.id}`}
-                className="flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--line)] bg-white/70 p-4 transition hover:border-[color:var(--teal)]"
+                className="flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--line)] bg-white/70 p-4 transition hover:border-[color:var(--green)]"
               >
                 <div className="min-w-0">
                   <p className="truncate font-black">{r.event.title}</p>

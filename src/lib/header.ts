@@ -12,7 +12,7 @@ export function getHeaderNavigation(
   club: HeaderClub,
 ): HeaderNavItem[] {
   if (!user) {
-    return [{ href: "/signin", label: "Sign in", variant: "primary" }];
+    return [{ href: "/signin", label: "Sign in", variant: "secondary" }];
   }
 
   const items: HeaderNavItem[] = [

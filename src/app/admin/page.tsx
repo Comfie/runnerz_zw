@@ -37,7 +37,7 @@ export default async function Admin() {
       <section className="surface rounded-[1.5rem] p-4 sm:p-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-2 text-xs font-bold uppercase text-[color:var(--teal-dark)]">
+            <p className="mb-2 text-xs font-bold uppercase text-[color:var(--green-dark)]">
               Platform control
             </p>
             <h1 className="text-2xl font-black sm:text-3xl">Admin</h1>
@@ -47,15 +47,15 @@ export default async function Admin() {
               <p className="text-xl font-black">{pendingClubs.length}</p>
               <p className="text-[0.65rem] font-bold uppercase text-[color:var(--muted)]">Pending</p>
             </div>
-            <div className="rounded-2xl bg-[rgba(242,184,75,0.18)] p-3">
+            <div className="rounded-2xl bg-[rgba(242,183,5,0.18)] p-3">
               <p className="text-xl font-black">{clubSummaries.length}</p>
               <p className="text-[0.65rem] font-bold uppercase text-[color:var(--muted)]">Clubs</p>
             </div>
-            <div className="rounded-2xl bg-[rgba(8,127,123,0.1)] p-3">
+            <div className="rounded-2xl bg-[rgba(30,142,62,0.1)] p-3">
               <p className="text-xl font-black">{publishedCount}<span className="text-sm font-normal text-[color:var(--muted)]">/{events.length}</span></p>
               <p className="text-[0.65rem] font-bold uppercase text-[color:var(--muted)]">Events live</p>
             </div>
-            <div className="rounded-2xl bg-[rgba(230,86,63,0.1)] p-3">
+            <div className="rounded-2xl bg-[rgba(210,38,47,0.1)] p-3">
               <p className="text-xl font-black">{registrationCount}</p>
               <p className="text-[0.65rem] font-bold uppercase text-[color:var(--muted)]">Registrations</p>
             </div>
@@ -107,7 +107,7 @@ export default async function Admin() {
           <div className="mt-3 grid gap-3 md:grid-cols-2">
             {clubSummaries.map((club) => (
               <Link
-                className="rounded-2xl border border-[color:var(--line)] bg-white/80 p-4 transition hover:border-[color:var(--teal)] hover:shadow-[var(--shadow-card)]"
+                className="rounded-2xl border border-[color:var(--line)] bg-white/80 p-4 transition hover:border-[color:var(--green)] hover:shadow-[var(--shadow-card)]"
                 href={`/admin/clubs/${club.id}`}
                 key={club.id}
               >
@@ -121,7 +121,7 @@ export default async function Admin() {
                   <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
                     club.status === "Approved"
                       ? "bg-emerald-100 text-emerald-700"
-                      : "bg-[rgba(242,184,75,0.24)] text-[color:var(--foreground)]"
+                      : "bg-[rgba(242,183,5,0.24)] text-[color:var(--foreground)]"
                   }`}>
                     {club.status}
                   </span>
@@ -185,7 +185,7 @@ export default async function Admin() {
                       {event.status === "PUBLISHED" ? "Live" : "Draft"}
                     </span>
                     {event.eventType && (
-                      <span className="rounded-full bg-[rgba(8,127,123,0.1)] px-2 py-0.5 text-[0.65rem] font-bold text-[color:var(--teal-dark)]">
+                      <span className="rounded-full bg-[rgba(30,142,62,0.1)] px-2 py-0.5 text-[0.65rem] font-bold text-[color:var(--green-dark)]">
                         {EVENT_TYPE_LABEL[event.eventType] ?? event.eventType}
                       </span>
                     )}

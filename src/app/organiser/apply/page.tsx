@@ -4,7 +4,7 @@ export default function Apply() {
   return (
     <main className="app-container grid min-h-[calc(100vh-5rem)] place-items-center py-6">
       <section className="surface w-full max-w-md rounded-[1.5rem] p-5 sm:p-7">
-      <p className="mb-2 text-xs font-bold uppercase text-[color:var(--teal-dark)]">
+      <p className="mb-2 text-xs font-bold uppercase text-[color:var(--green-dark)]">
         Club tools
       </p>
       <h1 className="text-2xl font-black">Apply as organiser</h1>
