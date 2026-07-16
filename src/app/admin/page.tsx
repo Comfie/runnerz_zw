@@ -132,17 +132,21 @@ export default async function Admin() {
         </section>
 
         {/* Tools */}
-        <section className="mt-6 grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="rounded-2xl border border-[color:var(--line)] bg-white/70 p-4">
-            <h2 className="font-black">Create club</h2>
+        <section className="mt-6 grid items-start gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+          <details className="rounded-2xl border border-[color:var(--line)] bg-white/70 p-4">
+            <summary className="cursor-pointer select-none font-black">
+              Create club
+            </summary>
             <form action={createClub} className="mt-3 grid gap-3">
               <input name="name" placeholder="Name" required className="field" />
               <input name="contact" placeholder="Contact" required className="field" />
               <button className="button-primary w-full">Create</button>
             </form>
-          </div>
-          <div className="rounded-2xl border border-[color:var(--line)] bg-white/70 p-4">
-            <h2 className="font-black">Seed event</h2>
+          </details>
+          <details className="rounded-2xl border border-[color:var(--line)] bg-white/70 p-4">
+            <summary className="cursor-pointer select-none font-black">
+              Seed event
+            </summary>
             <form action={seedEvent} className="mt-3 grid gap-3 sm:grid-cols-2">
               <select name="clubId" required className="field">
                 <option value="">Choose club</option>
@@ -158,7 +162,7 @@ export default async function Admin() {
               <textarea name="paymentInfo" placeholder="Payment note" required className="field min-h-24 sm:col-span-2" />
               <button className="button-primary w-full sm:col-span-2">Seed</button>
             </form>
-          </div>
+          </details>
         </section>
 
         {/* All events */}
