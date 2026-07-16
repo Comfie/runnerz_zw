@@ -48,6 +48,11 @@ function EventForm({ action }: { action: (formData: FormData) => void }) {
         className="field"
       />
       <input
+        name="locationPin"
+        placeholder="Google Maps link or coordinates, e.g. -17.82, 31.05 (optional)"
+        className="field"
+      />
+      <input
         name="distanceOptions"
         placeholder="Distances, e.g. 5k, 10k"
         required
@@ -64,9 +69,18 @@ function EventForm({ action }: { action: (formData: FormData) => void }) {
         <input type="checkbox" name="hasFinisherMedal" />
         Finisher medal awarded
       </label>
+      <label className="block text-sm font-bold">
+        Cover photo
+        <input
+          type="file"
+          name="coverImage"
+          accept="image/jpeg,image/png,image/webp"
+          className="field mt-1"
+        />
+      </label>
       <input
         name="coverImageUrl"
-        placeholder="Cover image URL"
+        placeholder="…or paste a cover image URL"
         className="field"
       />
       <textarea

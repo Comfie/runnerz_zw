@@ -44,6 +44,8 @@ type EventInput = {
   registrationDeadline?: Date | null
   expectedRunners?: number | null
   hasFinisherMedal?: boolean
+  lat?: number | null
+  lng?: number | null
 }
 
 export async function saveEvent(

@@ -62,5 +62,11 @@ export async function listPublishedDistanceOptions() {
 }
 
 export function getEvent(id: string) {
-  return db.event.findUnique({ where: { id }, include: { club: true } })
+  return db.event.findUnique({
+    where: { id },
+    include: {
+      club: true,
+      photos: { orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }] },
+    },
+  })
 }

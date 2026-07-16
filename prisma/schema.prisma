@@ -82,7 +82,18 @@ model Event {
   clubId          String
   club            Club           @relation(fields: [clubId], references: [id])
   registrations   Registration[]
+  photos          EventPhoto[]
   createdAt       DateTime       @default(now())
+}
+
+model EventPhoto {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  url       String
+  caption   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
 }
 
 model Registration {

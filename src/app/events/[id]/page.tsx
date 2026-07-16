@@ -4,6 +4,7 @@ import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { getEvent } from "@/lib/events"
 import { getCountdownLabel } from "@/lib/countdown"
+import { getRaceDayWeather } from "@/lib/weather"
 import { ShareButtons } from "@/components/ShareButtons"
 
 export const dynamic = "force-dynamic"
@@ -38,6 +39,10 @@ export default async function EventPage({
   const deadlineCountdown = e.registrationDeadline
     ? getCountdownLabel(e.registrationDeadline)
     : null
+  const weather =
+    e.lat !== null && e.lng !== null && !isPast
+      ? await getRaceDayWeather(e.lat, e.lng, e.startsAt)
+      : null
 
   return (
     <main className="app-container pt-5 sm:pt-8 pb-24 lg:py-8">
@@ -105,12 +110,60 @@ export default async function EventPage({
             </div>
           )}
 
+          {weather && (
+            <div className="surface rounded-[1.5rem] p-5 sm:p-6">
+              <h2 className="text-lg font-black">Race-day weather</h2>
+              <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-[color:var(--muted)]">
+                <span className="font-bold text-[color:var(--foreground)]">
+                  {weather.label}
+                </span>
+                <span>
+                  {weather.maxTempC}° / {weather.minTempC}°C
+                </span>
+                <span>Humidity {weather.humidityPct}%</span>
+                <span>Wind {weather.windKmh} km/h</span>
+              </div>
+              <p className="mt-2 text-xs text-[color:var(--muted)]">
+                Forecast via Open-Meteo
+              </p>
+            </div>
+          )}
+
+          {e.photos.length > 0 && (
+            <div className="surface rounded-[1.5rem] p-5 sm:p-6">
+              <h2 className="text-lg font-black">Photos</h2>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {e.photos.map((p) => (
+                  <div
+                    key={p.id}
+                    className="relative aspect-square overflow-hidden rounded-xl"
+                  >
+                    <Image
+                      src={p.url}
+                      alt={p.caption ?? e.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {e.lat !== null && e.lng !== null && (
             <div className="surface rounded-[1.5rem] p-5 sm:p-6">
               <h2 className="text-lg font-black">Location</h2>
               <p className="mt-2 text-sm text-[color:var(--muted)]">
                 {e.locationText}
               </p>
+              <div className="mt-3 overflow-hidden rounded-xl">
+                <iframe
+                  src={`https://maps.google.com/maps?q=${e.lat},${e.lng}&z=14&output=embed`}
+                  className="h-64 w-full border-0"
+                  loading="lazy"
+                  title="Event location map"
+                />
+              </div>
               <a
                 href={`https://maps.google.com/?q=${e.lat},${e.lng}`}
                 target="_blank"
@@ -135,7 +188,12 @@ export default async function EventPage({
                 />
               )}
               <div>
-                <p className="font-bold">{e.club.name}</p>
+                <Link
+                  href={`/clubs/${e.clubId}`}
+                  className="font-bold text-[color:var(--teal-dark)] hover:underline"
+                >
+                  {e.club.name}
+                </Link>
                 <p className="text-sm text-[color:var(--muted)]">
                   {e.club.contact}
                 </p>

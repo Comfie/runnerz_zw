@@ -1,7 +1,9 @@
 import { db } from "@/lib/db"
 import { requireOrganiser } from "@/lib/organisers"
 import { notFound } from "next/navigation"
-import { updateEvent } from "./actions"
+import Image from "next/image"
+import { listEventPhotos, MAX_PHOTOS_PER_EVENT } from "@/lib/photos"
+import { removePhoto, saveCaption, updateEvent, uploadPhotos } from "./actions"
 
 export const dynamic = "force-dynamic"
 
@@ -14,6 +16,7 @@ export default async function EditEvent({
   const { id } = await params
   const event = await db.event.findUnique({ where: { id } })
   if (!event || event.clubId !== clubId) notFound()
+  const photos = await listEventPhotos(id)
 
   return (
     <main className="app-container py-5 sm:py-8">
@@ -61,6 +64,16 @@ export default async function EditEvent({
             className="field"
           />
           <input
+            name="locationPin"
+            placeholder="Google Maps link or coordinates, e.g. -17.82, 31.05 (optional)"
+            defaultValue={
+              event.lat !== null && event.lng !== null
+                ? `${event.lat}, ${event.lng}`
+                : ""
+            }
+            className="field"
+          />
+          <input
             name="distanceOptions"
             defaultValue={event.distanceOptions.join(", ")}
             required
@@ -82,9 +95,19 @@ export default async function EditEvent({
             />
             Finisher medal awarded
           </label>
+          <label className="block text-sm font-bold">
+            Cover photo
+            <input
+              type="file"
+              name="coverImage"
+              accept="image/jpeg,image/png,image/webp"
+              className="field mt-1"
+            />
+          </label>
           <input
             name="coverImageUrl"
             defaultValue={event.coverImageUrl ?? ""}
+            placeholder="…or paste a cover image URL"
             className="field"
           />
           <textarea
@@ -101,6 +124,62 @@ export default async function EditEvent({
           />
           <button className="button-primary">Save</button>
         </form>
+      </section>
+
+      <section className="surface mx-auto mt-5 max-w-2xl rounded-[1.5rem] p-5 sm:p-7">
+        <h2 className="text-lg font-black">Photos</h2>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">
+          Up to {MAX_PHOTOS_PER_EVENT} photos shown on the public event page.
+        </p>
+        {photos.length < MAX_PHOTOS_PER_EVENT && (
+          <form
+            action={uploadPhotos.bind(null, id)}
+            className="mt-3 flex flex-wrap items-center gap-3"
+          >
+            <input
+              type="file"
+              name="photos"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              required
+              className="field flex-1"
+            />
+            <button className="button-primary">Upload</button>
+          </form>
+        )}
+        {photos.length > 0 && (
+          <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {photos.map((p) => (
+              <li key={p.id} className="space-y-2">
+                <div className="relative aspect-square overflow-hidden rounded-xl">
+                  <Image
+                    src={p.url}
+                    alt={p.caption ?? "Event photo"}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <form
+                  action={saveCaption.bind(null, id, p.id)}
+                  className="flex gap-2"
+                >
+                  <input
+                    name="caption"
+                    defaultValue={p.caption ?? ""}
+                    placeholder="Caption"
+                    className="field text-xs"
+                  />
+                  <button className="button-secondary text-xs">Save</button>
+                </form>
+                <form action={removePhoto.bind(null, id, p.id)}>
+                  <button className="button-secondary w-full text-xs">
+                    Delete
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </main>
   )

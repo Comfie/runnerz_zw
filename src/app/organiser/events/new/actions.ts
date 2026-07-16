@@ -3,6 +3,9 @@
 import { requireOrganiser, saveEvent } from "@/lib/organisers"
 import { redirect } from "next/navigation"
 import { EventType } from "@prisma/client"
+import { uploadEventImage } from "@/lib/blob"
+import { validateImageFile } from "@/lib/photos"
+import { parseLatLng } from "@/lib/geo"
 
 export async function createEvent(formData: FormData) {
   const { clubId } = await requireOrganiser()
@@ -10,6 +13,19 @@ export async function createEvent(formData: FormData) {
   const startsAtRaw = new Date(String(formData.get("startsAt") ?? ""))
   if (isNaN(startsAtRaw.getTime())) throw new Error("invalid startsAt")
   const rawRunners = parseInt(String(formData.get("expectedRunners") ?? ""), 10)
+  const coverFile = formData.get("coverImage")
+  let coverImageUrl = String(formData.get("coverImageUrl") ?? "") || null
+  if (coverFile instanceof File && coverFile.size > 0) {
+    const fileError = validateImageFile(coverFile)
+    if (fileError) throw new Error(fileError)
+    coverImageUrl = await uploadEventImage("events/covers", coverFile)
+  }
+  const locationPin = String(formData.get("locationPin") ?? "").trim()
+  const coords = locationPin ? parseLatLng(locationPin) : null
+  if (locationPin && !coords)
+    throw new Error(
+      "Could not read coordinates — paste a full Google Maps link or 'lat, lng'",
+    )
   await saveEvent(clubId, {
     title: String(formData.get("title")),
     description: String(formData.get("description")),
@@ -20,7 +36,7 @@ export async function createEvent(formData: FormData) {
       .map((s) => s.trim())
       .filter(Boolean),
     paymentInfo: String(formData.get("paymentInfo")),
-    coverImageUrl: String(formData.get("coverImageUrl") ?? "") || null,
+    coverImageUrl,
     eventType: eventType in EventType ? (eventType as EventType) : null,
     registrationDeadline: formData.get("registrationDeadline")
       ? new Date(String(formData.get("registrationDeadline")))
@@ -28,6 +44,8 @@ export async function createEvent(formData: FormData) {
     expectedRunners: Number.isFinite(rawRunners) ? rawRunners : null,
     hasFinisherMedal: formData.get("hasFinisherMedal") === "on",
     logistics: String(formData.get("logistics") ?? "") || null,
+    lat: coords?.lat ?? null,
+    lng: coords?.lng ?? null,
   })
   redirect("/organiser/dashboard")
 }
