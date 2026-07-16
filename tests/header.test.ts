@@ -2,11 +2,16 @@ import { describe, expect, it } from "vitest";
 import { getHeaderNavigation } from "@/lib/header";
 
 describe("getHeaderNavigation", () => {
-  it("shows sign in and organiser apply for signed-out users", () => {
+  it("shows only sign in for signed-out users", () => {
     expect(getHeaderNavigation(null, null)).toEqual([
+      { href: "/signin", label: "Sign in", variant: "primary" },
+    ]);
+  });
+
+  it("shows my runs and organiser apply for signed-in runners", () => {
+    expect(getHeaderNavigation({ role: "RUNNER" }, null)).toEqual([
       { href: "/me", label: "My runs", variant: "secondary" },
       { href: "/organiser/apply", label: "Organiser", variant: "secondary" },
-      { href: "/signin", label: "Sign in", variant: "primary" },
     ]);
   });
 

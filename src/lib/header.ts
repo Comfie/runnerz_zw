@@ -11,11 +11,15 @@ export function getHeaderNavigation(
   user: HeaderUser,
   club: HeaderClub,
 ): HeaderNavItem[] {
+  if (!user) {
+    return [{ href: "/signin", label: "Sign in", variant: "primary" }];
+  }
+
   const items: HeaderNavItem[] = [
     { href: "/me", label: "My runs", variant: "secondary" },
   ];
 
-  if (user?.role === "ORGANISER") {
+  if (user.role === "ORGANISER") {
     items.push({
       href: club?.verified ? "/organiser/dashboard" : "/organiser/pending",
       label: club?.verified ? "Dashboard" : "Pending",
@@ -29,12 +33,8 @@ export function getHeaderNavigation(
     });
   }
 
-  if (user?.role === "ADMIN") {
+  if (user.role === "ADMIN") {
     items.push({ href: "/admin", label: "Admin", variant: "secondary" });
-  }
-
-  if (!user) {
-    items.push({ href: "/signin", label: "Sign in", variant: "primary" });
   }
 
   return items;
