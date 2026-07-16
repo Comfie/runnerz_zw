@@ -4,6 +4,12 @@ type ClubApprovedEmailInput = {
   dashboardUrl: string;
 };
 
+type ContactMessageEmailInput = {
+  name: string;
+  email: string;
+  message: string;
+};
+
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -33,24 +39,24 @@ export function buildClubApprovedEmail({
     ].join("\n"),
     html: `<!doctype html>
 <html>
-  <body style="margin:0; background:#f2f7f0; color:#18201d; font-family:Arial,Helvetica,sans-serif;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f2f7f0; padding:32px 16px;">
+  <body style="margin:0; background:#f5f4ef; color:#14171a; font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f4ef; padding:32px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px; overflow:hidden; border:1px solid #d8e2d7; border-radius:24px; background:#fbfcf8;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px; overflow:hidden; border:1px solid #e2e0d8; border-radius:24px; background:#ffffff;">
             <tr>
-              <td style="height:10px; background:linear-gradient(90deg,#087f7b,#f2b84b,#e6563f);"></td>
+              <td style="height:10px; background:linear-gradient(90deg,#1e8e3e,#f2b705,#d2262f);"></td>
             </tr>
             <tr>
               <td style="padding:32px 28px 12px;">
-                <p style="margin:0 0 12px; color:#075f5c; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;">RunZW organiser approval</p>
-                <h1 style="margin:0; color:#18201d; font-size:30px; line-height:1.05; font-weight:900;">${safeClubName} is approved</h1>
-                <p style="margin:18px 0 0; color:#60716b; font-size:16px; line-height:1.65;">Hi ${safeName}, your club has been approved on RunZW. You can now create events, publish listings, and manage registrations from your organiser dashboard.</p>
+                <p style="margin:0 0 12px; color:#166b2f; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;">RunZW organiser approval</p>
+                <h1 style="margin:0; color:#14171a; font-size:30px; line-height:1.05; font-weight:900;">${safeClubName} is approved</h1>
+                <p style="margin:18px 0 0; color:#666b66; font-size:16px; line-height:1.65;">Hi ${safeName}, your club has been approved on RunZW. You can now create events, publish listings, and manage registrations from your organiser dashboard.</p>
               </td>
             </tr>
             <tr>
               <td style="padding:16px 28px 28px;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-radius:18px; background:#18201d;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-radius:18px; background:#14171a;">
                   <tr>
                     <td style="padding:20px;">
                       <p style="margin:0 0 4px; color:#ffffff; font-size:14px; font-weight:800;">Next step</p>
@@ -59,9 +65,65 @@ export function buildClubApprovedEmail({
                   </tr>
                 </table>
                 <p style="margin:24px 0 0;">
-                  <a href="${safeDashboardUrl}" style="display:inline-block; border-radius:999px; background:#087f7b; color:#ffffff; font-size:14px; font-weight:800; padding:13px 18px; text-decoration:none;">Open organiser dashboard</a>
+                  <a href="${safeDashboardUrl}" style="display:inline-block; border-radius:999px; background:#1e8e3e; color:#ffffff; font-size:14px; font-weight:800; padding:13px 18px; text-decoration:none;">Open organiser dashboard</a>
                 </p>
-                <p style="margin:22px 0 0; color:#60716b; font-size:12px; line-height:1.5;">If the button does not work, paste this link into your browser:<br><span style="color:#075f5c; word-break:break-all;">${safeDashboardUrl}</span></p>
+                <p style="margin:22px 0 0; color:#666b66; font-size:12px; line-height:1.5;">If the button does not work, paste this link into your browser:<br><span style="color:#166b2f; word-break:break-all;">${safeDashboardUrl}</span></p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`,
+  };
+}
+
+export function buildContactMessageEmail({
+  name,
+  email,
+  message,
+}: ContactMessageEmailInput) {
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+
+  return {
+    subject: `New contact message from ${name}`,
+    text: [
+      `New message from the RunZW contact form.`,
+      "",
+      `Name: ${name}`,
+      `Email: ${email}`,
+      "",
+      message,
+    ].join("\n"),
+    html: `<!doctype html>
+<html>
+  <body style="margin:0; background:#f5f4ef; color:#14171a; font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f4ef; padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px; overflow:hidden; border:1px solid #e2e0d8; border-radius:24px; background:#ffffff;">
+            <tr>
+              <td style="height:10px; background:linear-gradient(90deg,#1e8e3e,#f2b705,#d2262f);"></td>
+            </tr>
+            <tr>
+              <td style="padding:32px 28px 12px;">
+                <p style="margin:0 0 12px; color:#166b2f; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;">RunZW contact form</p>
+                <h1 style="margin:0; color:#14171a; font-size:26px; line-height:1.15; font-weight:900;">New message from ${safeName}</h1>
+                <p style="margin:18px 0 0; color:#666b66; font-size:14px; line-height:1.6;">Reply-to: <span style="color:#166b2f;">${safeEmail}</span></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 28px 28px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-radius:18px; background:#f5f4ef; border:1px solid #e2e0d8;">
+                  <tr>
+                    <td style="padding:20px;">
+                      <p style="margin:0; color:#14171a; font-size:14px; line-height:1.6;">${safeMessage}</p>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
           </table>

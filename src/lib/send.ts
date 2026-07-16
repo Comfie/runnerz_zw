@@ -1,6 +1,8 @@
 import { Resend } from "resend";
 import twilio from "twilio";
-import { buildClubApprovedEmail } from "@/lib/email";
+import { buildClubApprovedEmail, buildContactMessageEmail } from "@/lib/email";
+
+export const CONTACT_EMAIL = "comfynyatsine@gmail.com";
 
 function getEmailFrom() {
   if (process.env.EMAIL_FROM) return process.env.EMAIL_FROM;
@@ -61,5 +63,27 @@ export async function sendClubApprovedEmail({
     subject: email.subject,
     text: email.text,
     html: email.html,
+  });
+}
+
+export async function sendContactMessage({
+  name,
+  email,
+  message,
+}: {
+  name: string;
+  email: string;
+  message: string;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const built = buildContactMessageEmail({ name, email, message });
+
+  await resend.emails.send({
+    from: getEmailFrom(),
+    to: CONTACT_EMAIL,
+    replyTo: email,
+    subject: built.subject,
+    text: built.text,
+    html: built.html,
   });
 }
