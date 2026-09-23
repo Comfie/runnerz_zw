@@ -60,7 +60,7 @@ export function EventCard({
             className="object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--green)_0%,var(--green-dark)_45%,var(--foreground)_100%)]">
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--red)_0%,var(--blood)_45%,var(--maroon)_100%)]">
             <span className="absolute -bottom-3 right-3 text-6xl font-black uppercase text-white/10">
               {typeLabel ?? "Run"}
             </span>
@@ -70,7 +70,7 @@ export function EventCard({
 
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {typeLabel && (
-            <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-[color:var(--green-dark)]">
+            <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-[color:var(--blood)]">
               {typeLabel}
             </span>
           )}
@@ -81,7 +81,7 @@ export function EventCard({
           )}
         </div>
         {!isPast && countdown && (
-          <span className="absolute right-3 top-3 rounded-full bg-[color:var(--gold)] px-2.5 py-1 text-xs font-bold text-[color:var(--foreground)]">
+          <span className="absolute right-3 top-3 rounded-full bg-[color:var(--flag-yellow)] px-2.5 py-1 text-xs font-bold text-[color:var(--maroon)]">
             {countdown}
           </span>
         )}

@@ -98,21 +98,21 @@ export default async function EventPage({ params }: Props) {
             priority
           />
         ) : (
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--green)_0%,var(--green-dark)_40%,var(--foreground)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--red)_0%,var(--blood)_40%,var(--maroon)_100%)]" />
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70" />
         <div className="absolute bottom-0 left-0 px-5 pb-6 sm:px-8 sm:pb-8">
           <div className="mb-3 flex flex-wrap gap-2">
-            <span className="inline-flex rounded-full bg-[rgba(30,142,62,0.85)] px-3 py-1 text-xs font-bold text-white">
+            <span className="inline-flex rounded-full bg-[color:var(--maroon)]/80 px-3 py-1 text-xs font-bold text-white">
               {e.locationText}
             </span>
             {e.eventType && (
-              <span className="inline-flex rounded-full bg-[rgba(30,142,62,0.85)] px-3 py-1 text-xs font-bold text-white">
+              <span className="inline-flex rounded-full bg-[color:var(--maroon)]/80 px-3 py-1 text-xs font-bold text-white">
                 {EVENT_TYPE_LABEL[e.eventType] ?? e.eventType}
               </span>
             )}
             {!isPast && countdown && (
-              <span className="inline-flex rounded-full bg-[rgba(242,183,5,0.9)] px-3 py-1 text-xs font-bold text-[color:var(--foreground)]">
+              <span className="inline-flex rounded-full bg-[color:var(--flag-yellow)] px-3 py-1 text-xs font-bold text-[color:var(--maroon)]">
                 {countdown}
               </span>
             )}
@@ -127,7 +127,7 @@ export default async function EventPage({ params }: Props) {
       <div className="mt-5 gap-5 lg:grid lg:grid-cols-[1fr_20rem]">
         <div className="space-y-4">
           <div className="surface rounded-[1.5rem] p-5 lg:hidden">
-            <p className="mb-3 text-xs font-bold uppercase text-[color:var(--green-dark)]">
+            <p className="mb-3 text-xs font-bold uppercase text-[color:var(--blood)]">
               Race at a glance
             </p>
             {summary}
@@ -216,7 +216,7 @@ export default async function EventPage({ params }: Props) {
                 href={`https://maps.google.com/?q=${e.lat},${e.lng}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center text-sm font-bold text-[color:var(--green-dark)]"
+                className="mt-3 inline-flex items-center text-sm font-bold text-[color:var(--blood)]"
               >
                 View on Google Maps →
               </a>
@@ -238,7 +238,7 @@ export default async function EventPage({ params }: Props) {
               <div>
                 <Link
                   href={`/clubs/${e.clubId}`}
-                  className="font-bold text-[color:var(--green-dark)] hover:underline"
+                  className="font-bold text-[color:var(--blood)] hover:underline"
                 >
                   {e.club.name}
                 </Link>
@@ -357,9 +357,9 @@ function RegisterAction({
   return (
     <Link
       href={`/register/${eventId}`}
-      className={`button-primary ${compact ? "" : "mt-5 "}block w-full text-center`}
+      className={`button-flag ${compact ? "" : "mt-5 "}w-full`}
     >
-      Register
+      Enter now
     </Link>
   )
 }

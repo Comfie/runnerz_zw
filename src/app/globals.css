@@ -14,6 +14,10 @@ html {
   --green-dark: #166b2f;
   --gold: #f2b705;
   --red: #d2262f;
+  --blood: #8e0e14;
+  --maroon: #2a0406;
+  --flag-yellow: #ffd21f;
+  --cream: #fff3e2;
   --shadow-soft: 0 18px 45px rgba(20, 23, 26, 0.1);
   --shadow-card: 0 10px 30px rgba(20, 23, 26, 0.08);
 }
@@ -76,11 +80,11 @@ textarea {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: var(--gold);
-  padding: 0.625rem 1rem;
-  color: var(--foreground);
+  background: var(--flag-yellow);
+  padding: 0.625rem 1.1rem;
+  color: var(--maroon);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 800;
   transition:
     transform 160ms ease,
     box-shadow 160ms ease,
@@ -88,8 +92,8 @@ textarea {
 }
 
 .button-primary:hover {
-  background: #d9a405;
-  box-shadow: 0 10px 24px rgba(242, 183, 5, 0.32);
+  background: #ffdb4d;
+  box-shadow: 0 10px 24px rgba(255, 210, 31, 0.35);
   transform: translateY(-1px);
 }
 
@@ -99,7 +103,7 @@ textarea {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: var(--foreground);
+  background: var(--maroon);
   padding: 0.5rem 0.875rem;
   color: #ffffff;
   font-size: 0.875rem;
@@ -220,4 +224,93 @@ textarea {
 .field:focus {
   border-color: var(--gold);
   box-shadow: 0 0 0 4px rgba(242, 183, 5, 0.22);
+}
+
+/* ---------- Race-day hero ---------- */
+
+.font-marker {
+  font-family: var(--font-marker), "Comic Sans MS", cursive;
+}
+
+.hero-photo {
+  filter: grayscale(1) contrast(1.15) brightness(0.9);
+}
+
+.hero-tint {
+  background:
+    radial-gradient(120% 90% at 70% 30%, rgba(210, 38, 47, 0.35), transparent 60%),
+    linear-gradient(180deg, rgba(42, 4, 6, 0.35) 0%, rgba(142, 14, 20, 0.2) 45%, var(--maroon) 100%),
+    var(--blood);
+  mix-blend-mode: multiply;
+}
+
+.speed-lines {
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0 14px,
+    rgba(255, 90, 80, 0.22) 14px 16px,
+    transparent 16px 31px,
+    rgba(255, 120, 100, 0.12) 31px 32px
+  );
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.6) 35%, transparent 70%);
+  mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.6) 35%, transparent 70%);
+}
+
+.hero-display {
+  color: var(--cream);
+  font-size: clamp(2.9rem, 1rem + 5.4vw, 6rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+}
+
+.hero-display .font-marker {
+  color: var(--flag-yellow);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.button-flag {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: var(--flag-yellow);
+  padding: 0.75rem 1.4rem;
+  color: var(--maroon);
+  font-weight: 800;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.button-flag:hover {
+  box-shadow: 0 12px 30px rgba(255, 210, 31, 0.35);
+  transform: translateY(-1px);
+}
+
+/* A race bib: paper-white, four safety-pin holes, big number */
+.race-bib {
+  position: relative;
+  border-radius: 1.1rem;
+  background: #fffdf8;
+  color: var(--maroon);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+  transform: rotate(-1.5deg);
+}
+
+.bib-pin {
+  position: absolute;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--maroon);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+.bib-number {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.04em;
 }

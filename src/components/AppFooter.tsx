@@ -15,14 +15,14 @@ const LEGAL_LINKS = [
 
 export function AppFooter() {
   return (
-    <footer className="bg-[color:var(--foreground)] text-white/80">
+    <footer className="bg-[color:var(--maroon)] text-[color:var(--cream)]/80">
       <div className="app-container grid gap-8 py-10 sm:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <BrandLogo tone="light" />
           <p className="mt-3 max-w-xs text-sm leading-6 text-white/60">
             {BRAND.tagline}. Discover races, register in seconds, and never miss a start line.
           </p>
-          <Link href="/organiser/apply" className="button-primary mt-4 inline-flex min-h-9 px-4">
+          <Link href="/organiser/apply" className="button-flag mt-4 min-h-10 px-5 text-sm">
             List your race
           </Link>
         </div>

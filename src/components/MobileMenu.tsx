@@ -25,14 +25,14 @@ export function MobileMenu({
       <button
         aria-expanded={open}
         aria-label={open ? "Close navigation menu" : "Open navigation menu"}
-        className="inline-grid size-10 place-items-center rounded-full border border-[color:var(--line)] bg-white/80 shadow-sm"
+        className="inline-grid size-10 place-items-center rounded-full border border-white/15 bg-white/[0.06]"
         onClick={() => setOpen((value) => !value)}
         type="button"
       >
         <span className="flex flex-col gap-1" aria-hidden="true">
-          <span className="block h-0.5 w-5 rounded-full bg-[color:var(--foreground)]" />
-          <span className="block h-0.5 w-5 rounded-full bg-[color:var(--foreground)]" />
-          <span className="block h-0.5 w-5 rounded-full bg-[color:var(--foreground)]" />
+          <span className="block h-0.5 w-5 rounded-full bg-[color:var(--cream)]" />
+          <span className="block h-0.5 w-5 rounded-full bg-[color:var(--cream)]" />
+          <span className="block h-0.5 w-5 rounded-full bg-[color:var(--cream)]" />
         </span>
       </button>
 
@@ -47,7 +47,7 @@ export function MobileMenu({
           {items.map((item) =>
             item.variant === "primary" ? (
               <Link
-                className="button-primary m-1 flex"
+                className="button-flag m-1 flex"
                 href={item.href}
                 key={item.href}
                 onClick={close}

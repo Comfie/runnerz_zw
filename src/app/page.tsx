@@ -2,8 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { EventCard } from "@/components/EventCard"
 import { EventFilters } from "@/components/EventFilters"
-import { HeroUpcomingCard } from "@/components/HeroUpcomingCard"
-import { BRAND } from "@/lib/brand"
+import { NextRaceBib } from "@/components/NextRaceBib"
 import { listPublishedDistanceOptions, listPublishedEvents } from "@/lib/events"
 import { fmtDate, parseLocalDateTime } from "@/lib/format"
 
@@ -26,30 +25,22 @@ const TYPE_CHIPS = [
   { value: "KIDS", label: "Kids" },
 ]
 
-const WHY_RUNZW = [
+const HOW_IT_WORKS = [
   {
-    number: "01",
-    title: "One-tap registration",
-    copy: "No password needed. Register for a race in seconds.",
-    tone: "light" as const,
+    title: "Pick a race",
+    copy: "Browse road, trail, ultra and charity runs by type, town, date or distance.",
   },
   {
-    number: "02",
-    title: "Every race, one place",
-    copy: "Road, trail, ultra, relay, and charity runs across Zimbabwe, all in one calendar.",
-    tone: "green" as const,
+    title: "Enter in a minute",
+    copy: "Sign in with a one-time code sent to your phone or email. No password to remember.",
   },
   {
-    number: "03",
-    title: "Trusted organisers",
-    copy: "Events listed by registered clubs and organisers — not anonymous posts.",
-    tone: "light" as const,
+    title: "Pay the organiser",
+    copy: "Each race page shows how that organiser takes payment, and who to contact.",
   },
   {
-    number: "04",
-    title: "Real race-day details",
-    copy: "Logistics, countdowns, weather and maps for every event.",
-    tone: "gold" as const,
+    title: "Toe the line",
+    copy: "Your races, countdowns and race-day details live in My runs.",
   },
 ]
 
@@ -96,57 +87,81 @@ export default async function Home({
   const events = filtered ?? upcoming
   const towns = new Set(upcoming.map((e) => e.locationText.split(",")[0].trim().toLowerCase()))
 
+  const next = upcoming[0]
+  const nextRace = next && {
+    id: next.id,
+    title: next.title,
+    startsAtMs: next.startsAt.getTime(),
+    dateLabel: fmtDate(next.startsAt, { weekday: "short", day: "numeric", month: "short" }),
+    locationText: next.locationText,
+    distanceOptions: next.distanceOptions,
+    registrationOpen: !next.registrationDeadline || next.registrationDeadline > now,
+  }
+
   return (
-    <main className="app-container py-5 sm:py-8 lg:py-10">
-      <section className="relative min-h-[60vh] overflow-hidden rounded-[1.75rem]">
+    <main>
+      <section className="relative isolate overflow-hidden bg-[color:var(--maroon)]">
         <Image
-          src="/vic_falls.jpeg"
-          alt="Runners on a race course in Zimbabwe"
+          src="/hero-runners.jpg"
+          alt=""
           fill
-          sizes="(min-width: 1152px) 1152px, 100vw"
-          className="object-cover object-center"
+          sizes="100vw"
+          className="hero-photo -z-20 object-cover object-[55%_30%]"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/25 to-black/[0.78]" />
-        <div className="relative flex min-h-[60vh] flex-col justify-end gap-6 px-5 pb-8 sm:px-8 sm:pb-10 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="mb-3 inline-flex rounded-full bg-[color:var(--gold)] px-3 py-1 text-xs font-bold uppercase text-[color:var(--foreground)]">
-              {BRAND.tagline}
+        <div className="hero-tint absolute inset-0 -z-10" />
+        <div className="speed-lines absolute inset-y-0 left-0 -z-10 w-full opacity-40" />
+
+        <div className="app-container grid min-h-[calc(100svh-4rem)] items-end gap-10 pb-12 pt-10 sm:pb-16 lg:grid-cols-[1fr_auto] lg:gap-16">
+          <div className="max-w-3xl">
+            <p className="mb-6 inline-flex items-center gap-2 font-mono text-sm text-[color:var(--cream)]/80">
+              <span className="size-2 rounded-full bg-[color:var(--flag-yellow)] motion-safe:animate-pulse" />
+              {upcoming.length > 0
+                ? `${upcoming.length} upcoming ${upcoming.length === 1 ? "race" : "races"} in ${towns.size} ${towns.size === 1 ? "town" : "towns"} across Zimbabwe`
+                : "Zimbabwe's race calendar"}
             </p>
-            <h1 className="hero-title text-white">
-              Every finish line starts with <em>one decision</em>.
+            <h1 className="hero-display">
+              Find your race.
+              <br />
+              Chase the line.
+              <br />
+              Run <span className="font-marker">Zimbabwe.</span>
             </h1>
-            <p className="mt-4 max-w-xl text-base leading-7 text-white/80 sm:text-lg">
-              Discover road, trail and ultra races across Zimbabwe. Register in
-              seconds — no password needed.
+            <p className="mt-6 max-w-lg text-lg leading-8 text-[color:var(--cream)]/75">
+              Every road, trail and ultra race in the country, in one calendar. Enter in
+              a minute with a code to your phone.
             </p>
-            {upcoming.length > 0 && (
-              <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold text-white">
-                <span>
-                  <span className="text-[color:var(--gold)]">{upcoming.length}</span> upcoming{" "}
-                  {upcoming.length === 1 ? "race" : "races"}
-                </span>
-                <span>
-                  <span className="text-[color:var(--gold)]">{towns.size}</span>{" "}
-                  {towns.size === 1 ? "town" : "towns"}
-                </span>
-              </p>
-            )}
-            <a href="#races" className="button-primary mt-6 inline-flex">
-              Find your next race
-              <span className="icon-badge icon-badge-dark">↓</span>
-            </a>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a href="#races" className="button-flag">
+                Browse races
+              </a>
+              <Link
+                href="/organiser/apply"
+                className="inline-flex min-h-12 items-center rounded-full border border-[color:var(--cream)]/30 px-5 font-bold text-[color:var(--cream)] transition hover:bg-white/10"
+              >
+                List your race
+              </Link>
+            </div>
           </div>
-          <HeroUpcomingCard events={upcoming.slice(0, 3)} />
+
+          {nextRace ? (
+            <NextRaceBib race={nextRace} serverNow={now.getTime()} />
+          ) : (
+            <div className="race-bib w-full max-w-sm p-7">
+              <p className="text-2xl font-black leading-tight">New races are on the way.</p>
+              <p className="mt-2 text-sm">Organising one? Put it in front of Zimbabwe&rsquo;s runners.</p>
+              <Link href="/organiser/apply" className="button-flag mt-5 w-full">
+                List your race
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
-      <section id="races" className="scroll-mt-24 pt-8 sm:pt-10">
+      <div className="app-container pb-10">
+      <section id="races" className="scroll-mt-20 pt-12 sm:pt-16">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="field-label">Race calendar</p>
-            <h2 className="section-title font-black">Upcoming races</h2>
-          </div>
+          <h2 className="section-title font-black">Upcoming races</h2>
           {hasFilters && (
             <Link href="/#races" className="text-sm font-bold text-[color:var(--green-dark)] hover:underline">
               Clear filters
@@ -164,8 +179,8 @@ export default async function Home({
                 aria-current={active ? "page" : undefined}
                 className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold transition ${
                   active
-                    ? "border-[color:var(--foreground)] bg-[color:var(--foreground)] text-white"
-                    : "border-[color:var(--line)] bg-white text-[color:var(--foreground)] hover:border-[color:var(--green)]"
+                    ? "border-[color:var(--maroon)] bg-[color:var(--maroon)] text-[color:var(--cream)]"
+                    : "border-[color:var(--line)] bg-white text-[color:var(--foreground)] hover:border-[color:var(--blood)]"
                 }`}
               >
                 {chip.label}
@@ -217,60 +232,40 @@ export default async function Home({
         )}
       </section>
 
-      <section className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {WHY_RUNZW.map((item) => (
-          <div
-            key={item.number}
-            className={`rounded-[1.5rem] p-5 ${
-              item.tone === "green"
-                ? "bg-[color:var(--green-dark)] text-white"
-                : item.tone === "gold"
-                  ? "bg-[color:var(--gold)] text-[color:var(--foreground)]"
-                  : "border border-[color:var(--line)] bg-white text-[color:var(--foreground)]"
-            }`}
-          >
-            <span
-              className={`grid size-8 place-items-center rounded-full text-xs font-black ${
-                item.tone === "green"
-                  ? "bg-white text-[color:var(--green-dark)]"
-                  : "bg-[color:var(--foreground)] text-white"
-              }`}
-            >
-              {item.number}
-            </span>
-            <h3 className="mt-4 text-base font-black uppercase leading-tight">{item.title}</h3>
-            <p
-              className={`mt-2 text-sm leading-6 ${
-                item.tone === "light" ? "text-[color:var(--muted)]" : "opacity-85"
-              }`}
-            >
-              {item.copy}
-            </p>
-          </div>
-        ))}
+      <section className="mt-16">
+        <h2 className="section-title font-black">How it works</h2>
+        <ol className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {HOW_IT_WORKS.map((step, i) => (
+            <li key={step.title} className="border-t-4 border-[color:var(--blood)] pt-4">
+              <span className="bib-number text-4xl text-[color:var(--blood)]">{i + 1}</span>
+              <h3 className="mt-2 text-lg font-black">{step.title}</h3>
+              <p className="mt-1 text-sm leading-6 text-[color:var(--muted)]">{step.copy}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
-      <section className="relative mt-5 overflow-hidden rounded-[1.75rem] bg-[color:var(--foreground)] p-6 text-white sm:p-10">
+      <section className="relative mt-16 overflow-hidden rounded-[1.75rem] bg-[color:var(--maroon)] p-6 text-[color:var(--cream)] sm:p-10">
         <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,var(--green),var(--gold),var(--red))]" />
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-xl">
-            <p className="text-xs font-bold uppercase tracking-wide text-[color:var(--gold)]">
-              For clubs &amp; race organisers
+            <p className="text-sm font-bold text-[color:var(--flag-yellow)]">
+              For clubs and race organisers
             </p>
             <h2 className="mt-2 text-2xl font-black leading-tight sm:text-3xl">
               Put your race in front of Zimbabwe&rsquo;s runners.
             </h2>
-            <p className="mt-2 text-sm leading-6 text-white/70">
+            <p className="mt-2 text-sm leading-6 text-[color:var(--cream)]/70">
               List your event, take registrations with runner and emergency details, and
               export your entrant list in one click.
             </p>
           </div>
-          <Link href="/organiser/apply" className="button-primary shrink-0">
+          <Link href="/organiser/apply" className="button-flag shrink-0">
             List your race
-            <span className="icon-badge icon-badge-dark">→</span>
           </Link>
         </div>
       </section>
+      </div>
     </main>
   )
 }

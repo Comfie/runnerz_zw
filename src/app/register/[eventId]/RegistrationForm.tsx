@@ -111,7 +111,7 @@ export function RegistrationForm({
         </p>
       )}
 
-      <button disabled={pending} className="button-primary w-full disabled:opacity-60">
+      <button disabled={pending} className="button-flag w-full disabled:opacity-60">
         {pending ? "Registering…" : "Confirm registration"}
       </button>
     </form>
