@@ -7,12 +7,18 @@ export type HeaderNavItem = {
   variant: "primary" | "secondary";
 };
 
+export const PUBLIC_NAV = [
+  { href: "/#races", label: "Races" },
+  { href: "/organiser/apply", label: "List your race" },
+  { href: "/about", label: "About" },
+];
+
 export function getHeaderNavigation(
   user: HeaderUser,
   club: HeaderClub,
 ): HeaderNavItem[] {
   if (!user) {
-    return [{ href: "/signin", label: "Sign in", variant: "secondary" }];
+    return [{ href: "/signin", label: "Sign in", variant: "primary" }];
   }
 
   const items: HeaderNavItem[] = [
@@ -23,12 +29,6 @@ export function getHeaderNavigation(
     items.push({
       href: club?.verified ? "/organiser/dashboard" : "/organiser/pending",
       label: club?.verified ? "Dashboard" : "Pending",
-      variant: "secondary",
-    });
-  } else {
-    items.push({
-      href: "/organiser/apply",
-      label: "Organiser",
       variant: "secondary",
     });
   }

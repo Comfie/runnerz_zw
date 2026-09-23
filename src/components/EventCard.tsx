@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { getCountdownLabel } from "@/lib/countdown"
 import { dateParts, fmtTime } from "@/lib/format"
@@ -21,6 +22,7 @@ export function EventCard({
     startsAt: Date
     locationText: string
     distanceOptions: string[]
+    coverImageUrl: string | null
     club: { name: string }
     eventType: EventType | null
     registrationDeadline: Date | null
@@ -28,102 +30,101 @@ export function EventCard({
     hasFinisherMedal: boolean
   }
 }) {
-  const date = e.startsAt
-  const parts = dateParts(date)
+  const parts = dateParts(e.startsAt)
   const now = new Date()
   const isPast = e.startsAt < now
   const isRegistrationClosed =
     isPast || (e.registrationDeadline !== null && e.registrationDeadline < now)
-  const countdown = getCountdownLabel(date)
-  const deadlineCountdown = e.registrationDeadline
-    ? getCountdownLabel(e.registrationDeadline)
-    : null
+  const countdown = getCountdownLabel(e.startsAt)
+  const deadlineCountdown =
+    e.registrationDeadline && !isRegistrationClosed
+      ? getCountdownLabel(e.registrationDeadline)
+      : null
+  const closingSoon =
+    deadlineCountdown && ["Today!", "Tomorrow", "This week"].includes(deadlineCountdown)
+  const hasImage = Boolean(e.coverImageUrl && /^https?:\/\/|^\//.test(e.coverImageUrl))
+  const typeLabel = e.eventType ? (EVENT_TYPE_LABEL[e.eventType] ?? e.eventType) : null
 
   return (
     <Link
       href={`/events/${e.id}`}
-      className="group relative flex min-h-64 flex-col overflow-hidden rounded-[1.5rem] border border-[rgba(20,23,26,0.1)] bg-[color:var(--surface)] p-4 shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
+      className="group flex flex-col overflow-hidden rounded-[1.5rem] border border-[rgba(20,23,26,0.1)] bg-[color:var(--surface)] shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
     >
-      <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,var(--green),var(--gold),var(--red))]" />
+      <div className="relative aspect-[16/9] overflow-hidden">
+        {hasImage ? (
+          <Image
+            src={e.coverImageUrl!}
+            alt=""
+            fill
+            sizes="(min-width: 1280px) 360px, (min-width: 768px) 50vw, 100vw"
+            className="object-cover transition duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--green)_0%,var(--green-dark)_45%,var(--foreground)_100%)]">
+            <span className="absolute -bottom-3 right-3 text-6xl font-black uppercase text-white/10">
+              {typeLabel ?? "Run"}
+            </span>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
 
-      <div className="flex items-start justify-between gap-3 pt-2">
-        {/* Date block */}
-        <div className="rounded-2xl bg-[color:var(--foreground)] px-3 py-2 text-center text-white">
-          <span className="block text-[0.6rem] font-bold uppercase leading-none text-white/65">
-            {parts.weekday}
-          </span>
-          <span className="block text-xs font-bold uppercase text-white/65">
-            {parts.month}
-          </span>
-          <span className="block text-2xl font-black leading-none">
-            {parts.day}
-          </span>
-        </div>
-
-        {/* Top-right badges */}
-        <div className="flex flex-col items-end gap-2">
-          <span className="rounded-full bg-[rgba(30,142,62,0.1)] px-3 py-1 text-xs font-bold text-[color:var(--green-dark)]">
-            {e.locationText}
-          </span>
-          {e.eventType && (
-            <span className="rounded-full bg-[rgba(30,142,62,0.1)] px-3 py-1 text-xs font-bold text-[color:var(--green-dark)]">
-              {EVENT_TYPE_LABEL[e.eventType] ?? e.eventType}
+        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+          {typeLabel && (
+            <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-[color:var(--green-dark)]">
+              {typeLabel}
             </span>
           )}
-          {!isRegistrationClosed && deadlineCountdown && (
-            <span className="rounded-full bg-[rgba(220,38,38,0.12)] px-3 py-1 text-xs font-bold text-red-700">
-              Closes {deadlineCountdown.toLowerCase()}
-            </span>
-          )}
-          {e.registrationDeadline && !isPast && isRegistrationClosed && (
-            <span className="text-xs text-[color:var(--muted)]">
-              Registration closed
-            </span>
-          )}
-          {!isRegistrationClosed && countdown && (
-            <span className="rounded-full bg-[color:var(--gold)] px-3 py-1 text-xs font-bold text-[color:var(--foreground)]">
-              {countdown}
+          {closingSoon && (
+            <span className="rounded-full bg-[color:var(--red)] px-2.5 py-1 text-xs font-bold text-white">
+              Entries close {deadlineCountdown!.toLowerCase()}
             </span>
           )}
         </div>
-      </div>
-
-      <h3 className="mt-5 text-xl font-black leading-tight tracking-normal">
-        {e.title}
-      </h3>
-      <p className="mt-1 text-xs text-[color:var(--muted)]">by {e.club.name}</p>
-
-      <div className="divider-dashed mt-3 flex flex-wrap items-center gap-2 pt-3">
-        <span className="text-sm text-[color:var(--muted)]">
-          {fmtTime(date)}
-        </span>
-        {/* Reserved slot for a future registered-count / capacity badge
-            (e.g. "124/500") — expected-runners estimate stands in for now. */}
-        {e.expectedRunners !== null && (
-          <span className="rounded-full border border-[color:var(--line)] bg-white px-3 py-1 text-xs font-bold text-[color:var(--muted)]">
-            ~{e.expectedRunners.toLocaleString()} runners expected
+        {!isPast && countdown && (
+          <span className="absolute right-3 top-3 rounded-full bg-[color:var(--gold)] px-2.5 py-1 text-xs font-bold text-[color:var(--foreground)]">
+            {countdown}
           </span>
         )}
-        {e.hasFinisherMedal && (
-          <span className="text-xs text-[color:var(--muted)]">★ Finisher medal</span>
-        )}
-      </div>
 
-      <div className="mt-auto flex flex-wrap gap-2 pt-6">
-        {e.distanceOptions.map((distance) => (
-          <span
-            key={distance}
-            className="rounded-full border border-[color:var(--line)] px-3 py-1 text-xs font-bold"
-          >
-            {distance}
+        <div className="absolute bottom-3 left-3 rounded-2xl bg-white px-3 py-1.5 text-center shadow-sm">
+          <span className="block text-[0.6rem] font-bold uppercase leading-tight text-[color:var(--muted)]">
+            {parts.weekday} · {parts.month}
           </span>
-        ))}
+          <span className="block text-2xl font-black leading-none">{parts.day}</span>
+        </div>
       </div>
 
-      <span className="mt-5 inline-flex items-center text-sm font-bold text-[color:var(--green-dark)]">
-        View details
-        <span className="icon-badge icon-badge-dark">→</span>
-      </span>
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="text-lg font-black leading-tight">{e.title}</h3>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">
+          {e.locationText} · {fmtTime(e.startsAt)}
+        </p>
+
+        <div className="mb-4 mt-3 flex flex-wrap gap-1.5">
+          {e.distanceOptions.map((distance) => (
+            <span
+              key={distance}
+              className="rounded-full border border-[color:var(--line)] px-2.5 py-0.5 text-xs font-bold"
+            >
+              {distance}
+            </span>
+          ))}
+        </div>
+
+        <div className="divider-dashed mt-auto flex items-center justify-between gap-3 pt-3 text-xs text-[color:var(--muted)]">
+          <span className="flex flex-wrap gap-x-3 gap-y-1">
+            {e.expectedRunners !== null && (
+              <span>~{e.expectedRunners.toLocaleString()} runners</span>
+            )}
+            {e.hasFinisherMedal && <span>★ Medal</span>}
+            {!e.expectedRunners && !e.hasFinisherMedal && <span>by {e.club.name}</span>}
+            {isRegistrationClosed && !isPast && (
+              <span className="font-bold">Entries closed</span>
+            )}
+          </span>
+          <span className="icon-badge icon-badge-dark">→</span>
+        </div>
+      </div>
     </Link>
   )
 }

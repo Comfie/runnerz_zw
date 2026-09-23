@@ -5,20 +5,26 @@ import Link from "next/link";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 
+const ITEM =
+  "block rounded-xl px-4 py-3 text-sm font-bold text-[color:var(--foreground)] hover:bg-[rgba(30,142,62,0.08)]";
+
 export function MobileMenu({
   items,
+  links,
   signedIn,
 }: {
   items: HeaderNavItem[];
+  links: { href: string; label: string }[];
   signedIn: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
 
   return (
-    <div className="relative sm:hidden">
+    <div className="relative lg:hidden">
       <button
         aria-expanded={open}
-        aria-label="Open navigation menu"
+        aria-label={open ? "Close navigation menu" : "Open navigation menu"}
         className="inline-grid size-10 place-items-center rounded-full border border-[color:var(--line)] bg-white/80 shadow-sm"
         onClick={() => setOpen((value) => !value)}
         type="button"
@@ -32,19 +38,31 @@ export function MobileMenu({
 
       {open && (
         <div className="absolute right-0 top-12 z-30 w-64 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-2 shadow-[var(--shadow-soft)]">
-          {items.map((item) => (
-            <Link
-              className="block rounded-xl px-4 py-3 text-sm font-bold text-[color:var(--foreground)] hover:bg-[rgba(30,142,62,0.08)]"
-              href={item.href}
-              key={item.href}
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
+          {links.map((link) => (
+            <Link className={ITEM} href={link.href} key={link.href} onClick={close}>
+              {link.label}
             </Link>
           ))}
+          <div className="divider-dashed my-2" />
+          {items.map((item) =>
+            item.variant === "primary" ? (
+              <Link
+                className="button-primary m-1 flex"
+                href={item.href}
+                key={item.href}
+                onClick={close}
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <Link className={ITEM} href={item.href} key={item.href} onClick={close}>
+                {item.label}
+              </Link>
+            ),
+          )}
           {signedIn && (
             <button
-              className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-[color:var(--foreground)] hover:bg-[rgba(30,142,62,0.08)]"
+              className={`${ITEM} w-full text-left text-[color:var(--muted)]`}
               onClick={() => signOut({ redirectTo: "/" })}
               type="button"
             >

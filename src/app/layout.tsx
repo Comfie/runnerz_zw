@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
 import { Geist, Geist_Mono } from "next/font/google";
+import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,27 +15,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_DESCRIPTION =
-  "Find and register for running races across Zimbabwe — road, trail, ultra, relay and charity runs in one calendar.";
+const TITLE = `${BRAND.name} — ${BRAND.tagline}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
-  title: { default: "RunZW — Zimbabwe Race Calendar", template: "%s | RunZW" },
-  description: SITE_DESCRIPTION,
+  title: { default: TITLE, template: `%s | ${BRAND.name}` },
+  description: BRAND.description,
   manifest: "/manifest.webmanifest",
+  applicationName: BRAND.name,
   openGraph: {
     type: "website",
-    siteName: "RunZW",
+    siteName: BRAND.name,
     locale: "en_ZW",
-    title: "RunZW — Zimbabwe Race Calendar",
-    description: SITE_DESCRIPTION,
+    title: TITLE,
+    description: BRAND.description,
     images: [{ url: "/og-default.jpg", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image", images: ["/og-default.jpg"] },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1e8e3e",
+  themeColor: "#166b2f",
 };
 
 export default function RootLayout({

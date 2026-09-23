@@ -84,8 +84,10 @@ export default async function EventPage({ params }: Props) {
   )
 
   return (
-    <main className="app-container pt-5 sm:pt-8 pb-24 lg:py-8">
-      <section className="relative min-h-[45vh] overflow-hidden rounded-[1.75rem]">
+    <main className="app-container pt-5 sm:pt-8 lg:py-8">
+      <section
+        className={`relative overflow-hidden rounded-[1.75rem] ${isUsableImage(e.coverImageUrl) ? "min-h-[45vh]" : "min-h-56 sm:min-h-72"}`}
+      >
         {isUsableImage(e.coverImageUrl) ? (
           <Image
             src={e.coverImageUrl}
@@ -257,7 +259,7 @@ export default async function EventPage({ params }: Props) {
         </aside>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 border-t border-[color:var(--line)] bg-[rgba(251,252,248,0.92)] px-4 py-3 backdrop-blur lg:hidden">
+      <div className="sticky bottom-0 -mx-4 mt-6 border-t border-[color:var(--line)] bg-[rgba(251,252,248,0.92)] px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:hidden">
         <RegisterAction eventId={e.id} isRegistrationClosed={isRegistrationClosed} compact />
       </div>
     </main>

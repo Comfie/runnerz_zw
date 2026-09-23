@@ -1,15 +1,14 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getHeaderNavigation } from "@/lib/header";
+import { getHeaderNavigation, PUBLIC_NAV } from "@/lib/header";
 import Link from "next/link";
+import { BrandLogo } from "./BrandLogo";
 import { SignOutButton } from "./SignOutButton";
 import { MobileMenu } from "./MobileMenu";
 
 export async function AppHeader() {
   const session = await auth();
-  const user = session?.user as
-    | { id?: string; name?: string | null; email?: string | null; role?: string }
-    | undefined;
+  const user = session?.user as { id?: string; role?: string } | undefined;
   const club = user?.id
     ? await db.club.findUnique({
         where: { ownerId: user.id },
@@ -19,36 +18,38 @@ export async function AppHeader() {
   const items = getHeaderNavigation(user ?? null, club);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-[color:var(--line)] bg-white">
-      <nav className="app-container flex min-h-16 items-center justify-between gap-3 py-3 text-sm">
-        <Link className="flex items-center gap-2 font-bold" href="/">
-          <span className="grid size-9 place-items-center rounded-full bg-[color:var(--green)] text-sm font-black text-white shadow-sm">
-            RZ
-          </span>
-          <span>RunZW</span>
+    <header className="sticky top-0 z-20 border-b border-[color:var(--line)] bg-white/90 backdrop-blur">
+      <nav className="app-container flex min-h-16 items-center justify-between gap-4 py-3 text-sm">
+        <Link href="/" aria-label="RunZW home">
+          <BrandLogo />
         </Link>
-        {/* Reserved for future primary nav (Events, Services, Leaderboards...) */}
-        <div className="hidden items-center gap-6 lg:flex" />
-        <MobileMenu items={items} signedIn={Boolean(user)} />
-        <div className="hidden flex-col gap-2 sm:flex sm:items-end">
-          {user && (
-            <p className="text-xs font-semibold text-[color:var(--muted)]">
-              Signed in as {user.name ?? user.email ?? "Runner"} · {user.role ?? "RUNNER"}
-            </p>
-          )}
-          <div className="flex flex-wrap items-center gap-2 text-[0.8rem] font-semibold text-[color:var(--muted)] sm:justify-end">
-            {items.map((item) => (
-              <Link
-                className={`${item.variant === "primary" ? "button-primary" : "button-secondary"} min-h-9 px-3`}
-                href={item.href}
-                key={item.href}
-              >
-                {item.label}
-              </Link>
-            ))}
-            {user && <SignOutButton />}
-          </div>
+
+        <div className="hidden items-center gap-1 lg:flex">
+          {PUBLIC_NAV.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-full px-4 py-2 font-bold text-[color:var(--muted)] transition hover:bg-[rgba(30,142,62,0.08)] hover:text-[color:var(--foreground)]"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
+
+        <div className="hidden items-center gap-2 lg:flex">
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`${item.variant === "primary" ? "button-primary" : "button-secondary"} min-h-9 px-4`}
+            >
+              {item.label}
+            </Link>
+          ))}
+          {user && <SignOutButton />}
+        </div>
+
+        <MobileMenu items={items} links={PUBLIC_NAV} signedIn={Boolean(user)} />
       </nav>
     </header>
   );

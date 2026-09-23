@@ -4,14 +4,13 @@ import { getHeaderNavigation } from "@/lib/header";
 describe("getHeaderNavigation", () => {
   it("shows only sign in for signed-out users", () => {
     expect(getHeaderNavigation(null, null)).toEqual([
-      { href: "/signin", label: "Sign in", variant: "secondary" },
+      { href: "/signin", label: "Sign in", variant: "primary" },
     ]);
   });
 
-  it("shows my runs and organiser apply for signed-in runners", () => {
+  it("shows only my runs for signed-in runners (organiser apply lives in the public nav)", () => {
     expect(getHeaderNavigation({ role: "RUNNER" }, null)).toEqual([
       { href: "/me", label: "My runs", variant: "secondary" },
-      { href: "/organiser/apply", label: "Organiser", variant: "secondary" },
     ]);
   });
 

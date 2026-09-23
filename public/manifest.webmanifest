@@ -1,12 +1,13 @@
 {
-  "name": "RunZW",
+  "name": "RunZW — Zimbabwe Race Calendar",
   "short_name": "RunZW",
+  "description": "The home of running in Zimbabwe. Find and register for races across the country.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#0f172a",
+  "background_color": "#f5f4ef",
+  "theme_color": "#166b2f",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

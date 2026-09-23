@@ -1,36 +1,33 @@
-export function EventFilters({ distances }: { distances: string[] }) {
+export function EventFilters({
+  distances,
+  values = {},
+}: {
+  distances: string[]
+  values?: { location?: string; distance?: string; from?: string; eventType?: string }
+}) {
   return (
     <form
-      className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr_0.8fr_0.8fr_auto]"
+      className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_auto]"
       method="get"
+      action="/#races"
     >
+      {values.eventType && <input type="hidden" name="eventType" value={values.eventType} />}
       <label>
         <span className="field-label">Location</span>
         <input
           name="location"
           placeholder="Harare, Bulawayo..."
+          defaultValue={values.location}
           className="field"
         />
       </label>
       <label>
-        <span className="field-label">Type</span>
-        <select name="eventType" className="field">
-          <option value="">Any type</option>
-          <option value="ROAD">Road</option>
-          <option value="TRAIL">Trail</option>
-          <option value="ULTRA">Ultra</option>
-          <option value="RELAY">Relay</option>
-          <option value="CHARITY">Charity</option>
-          <option value="KIDS">Kids</option>
-        </select>
-      </label>
-      <label>
         <span className="field-label">From</span>
-        <input type="date" name="from" className="field" />
+        <input type="date" name="from" defaultValue={values.from} className="field" />
       </label>
       <label>
         <span className="field-label">Distance</span>
-        <select name="distance" className="field">
+        <select name="distance" defaultValue={values.distance ?? ""} className="field">
           <option value="">Any distance</option>
           {distances.map((d) => (
             <option key={d} value={d}>
@@ -39,9 +36,7 @@ export function EventFilters({ distances }: { distances: string[] }) {
           ))}
         </select>
       </label>
-      <button className="button-primary mt-1 w-full self-end lg:col-span-1">
-        Filter events
-      </button>
+      <button className="button-primary w-full self-end">Apply filters</button>
     </form>
   )
 }

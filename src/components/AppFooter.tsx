@@ -1,5 +1,7 @@
 import Link from "next/link"
+import { BRAND } from "@/lib/brand"
 import { CONTACT_EMAIL } from "@/lib/send"
+import { BrandLogo } from "./BrandLogo"
 
 const COMPANY_LINKS = [
   { href: "/about", label: "About" },
@@ -15,16 +17,14 @@ export function AppFooter() {
   return (
     <footer className="bg-[color:var(--foreground)] text-white/80">
       <div className="app-container grid gap-8 py-10 sm:grid-cols-[1.4fr_1fr_1fr]">
-        <div className="flex items-start gap-3">
-          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[color:var(--green)] text-sm font-black text-white">
-            RZ
-          </span>
-          <div>
-            <p className="font-bold text-white">RunZW</p>
-            <p className="mt-1 text-xs text-white/60">
-              Zimbabwe&rsquo;s race calendar.
-            </p>
-          </div>
+        <div>
+          <BrandLogo tone="light" />
+          <p className="mt-3 max-w-xs text-sm leading-6 text-white/60">
+            {BRAND.tagline}. Discover races, register in seconds, and never miss a start line.
+          </p>
+          <Link href="/organiser/apply" className="button-primary mt-4 inline-flex min-h-9 px-4">
+            List your race
+          </Link>
         </div>
 
         <div>
@@ -64,7 +64,7 @@ export function AppFooter() {
             {CONTACT_EMAIL}
           </a>
           <p className="text-xs text-white/60">
-            &copy; {new Date().getFullYear()} RunZW
+            &copy; {new Date().getFullYear()} {BRAND.name}
           </p>
         </div>
       </div>
