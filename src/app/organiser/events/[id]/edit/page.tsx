@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import Image from "next/image"
 import { listEventPhotos, MAX_PHOTOS_PER_EVENT } from "@/lib/photos"
 import { removePhoto, saveCaption, updateEvent, uploadPhotos } from "./actions"
+import { toLocalInputValue } from "@/lib/format"
 
 export const dynamic = "force-dynamic"
 
@@ -47,14 +48,14 @@ export default async function EditEvent({
           <input
             name="startsAt"
             type="datetime-local"
-            defaultValue={event.startsAt.toISOString().slice(0, 16)}
+            defaultValue={toLocalInputValue(event.startsAt)}
             required
             className="field"
           />
           <input
             name="registrationDeadline"
             type="datetime-local"
-            defaultValue={event.registrationDeadline?.toISOString().slice(0, 16) ?? ""}
+            defaultValue={toLocalInputValue(event.registrationDeadline)}
             className="field"
           />
           <input

@@ -3,6 +3,7 @@ import { EventCard } from "@/components/EventCard"
 import { EventFilters } from "@/components/EventFilters"
 import { HeroUpcomingCard } from "@/components/HeroUpcomingCard"
 import { listPublishedDistanceOptions, listPublishedEvents } from "@/lib/events"
+import { parseLocalDateTime } from "@/lib/format"
 
 export const dynamic = "force-dynamic"
 
@@ -48,7 +49,7 @@ export default async function Home({
     listPublishedEvents({
       location: sp.location,
       distance: sp.distance,
-      from: sp.from ? new Date(sp.from) : undefined,
+      from: (sp.from && parseLocalDateTime(`${sp.from}T00:00`)) || new Date(),
       eventType: sp.eventType,
     }),
     listPublishedDistanceOptions(),
@@ -140,7 +141,7 @@ export default async function Home({
       <div id="races" className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {events.length === 0 && (
           <p className="rounded-2xl border border-dashed border-[color:var(--line)] bg-white/70 p-5 text-sm text-[color:var(--muted)] md:col-span-2 xl:col-span-3">
-            No events yet. Check back soon.
+            No upcoming races match your filters. Try a different location or distance.
           </p>
         )}
         {events.map((e) => (

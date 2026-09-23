@@ -1,3 +1,4 @@
+import { cache } from "react"
 import { db } from "@/lib/db"
 import { EventType } from "@prisma/client"
 import type { Prisma } from "@prisma/client"
@@ -61,12 +62,12 @@ export async function listPublishedDistanceOptions() {
   return buildDistanceOptions(events)
 }
 
-export function getEvent(id: string) {
-  return db.event.findUnique({
+export const getEvent = cache((id: string) =>
+  db.event.findUnique({
     where: { id },
     include: {
       club: true,
       photos: { orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }] },
     },
-  })
-}
+  }),
+)

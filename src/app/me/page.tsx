@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCountdownLabel } from "@/lib/countdown";
+import { fmtShortDate, fmtTime, dateParts } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -81,13 +82,13 @@ export default async function Me() {
                     {/* Date block */}
                     <div className="rounded-2xl bg-[color:var(--foreground)] px-3 py-2 text-center text-white">
                       <span className="block text-[0.6rem] font-bold uppercase leading-none text-white/65">
-                        {r.event.startsAt.toLocaleString("en", { weekday: "short" })}
+                        {dateParts(r.event.startsAt).weekday}
                       </span>
                       <span className="block text-xs font-bold uppercase text-white/65">
-                        {r.event.startsAt.toLocaleString("en", { month: "short" })}
+                        {dateParts(r.event.startsAt).month}
                       </span>
                       <span className="block text-2xl font-black leading-none">
-                        {r.event.startsAt.getDate()}
+                        {dateParts(r.event.startsAt).day}
                       </span>
                     </div>
                     <div className="flex flex-col items-end gap-1.5">
@@ -121,7 +122,7 @@ export default async function Me() {
                     )}
                   </div>
                   <p className="mt-3 text-xs text-[color:var(--muted)]">
-                    {r.event.startsAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    {fmtTime(r.event.startsAt)}
                   </p>
                   <span className="mt-4 inline-flex items-center text-sm font-bold text-[color:var(--green-dark)]">
                     View event
@@ -148,7 +149,7 @@ export default async function Me() {
                 <div className="min-w-0">
                   <p className="truncate font-black">{r.event.title}</p>
                   <p className="mt-0.5 text-sm text-[color:var(--muted)]">
-                    {r.event.startsAt.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" })}
+                    {fmtShortDate(r.event.startsAt)}
                     {" · "}{r.distance}
                     {r.event.eventType ? ` · ${EVENT_TYPE_LABEL[r.event.eventType] ?? r.event.eventType}` : ""}
                   </p>

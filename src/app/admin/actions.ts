@@ -2,6 +2,7 @@
 
 import { approveClub, requireAdmin, setEventStatusAsAdmin } from "@/lib/admin";
 import { db } from "@/lib/db";
+import { parseLocalDateTime } from "@/lib/format";
 import { saveEvent } from "@/lib/organisers";
 import { sendClubApprovedEmail } from "@/lib/send";
 import { revalidatePath } from "next/cache";
@@ -56,10 +57,12 @@ export async function createClub(formData: FormData) {
 
 export async function seedEvent(formData: FormData) {
   await requireAdmin();
+  const startsAt = parseLocalDateTime(String(formData.get("startsAt") ?? ""));
+  if (!startsAt) throw new Error("invalid startsAt");
   await saveEvent(String(formData.get("clubId")), {
     title: String(formData.get("title")),
     description: String(formData.get("description")),
-    startsAt: new Date(String(formData.get("startsAt"))),
+    startsAt,
     locationText: String(formData.get("locationText")),
     distanceOptions: String(formData.get("distanceOptions"))
       .split(",")

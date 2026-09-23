@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { requireOrganiser } from "@/lib/organisers";
 import Link from "next/link";
 import { updateEventStatus } from "./actions";
+import { fmtShortDate, fmtDate, fmtTime } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -63,9 +64,9 @@ export default async function Dashboard() {
                       )}
                     </div>
                     <p className="mt-1 text-sm text-[color:var(--muted)]">
-                      {e.startsAt.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" })}
+                      {fmtShortDate(e.startsAt)}
                       {" · "}
-                      {e.startsAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {fmtTime(e.startsAt)}
                       {" · "}
                       {e.locationText}
                     </p>
@@ -77,7 +78,7 @@ export default async function Dashboard() {
                             ? "Registration closed"
                             : isPast
                             ? "Event ended"
-                            : `Reg. closes ${e.registrationDeadline.toLocaleDateString([], { day: "numeric", month: "short" })}`}
+                            : `Reg. closes ${fmtDate(e.registrationDeadline, { day: "numeric", month: "short" })}`}
                         </span>
                       )}
                       {e.expectedRunners && (

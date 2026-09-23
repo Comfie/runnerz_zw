@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { approveClubAction, setAdminEventStatus } from "../../actions";
+import { fmtShortDate } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -117,7 +118,7 @@ export default async function AdminClubPage({
                     )}
                   </div>
                   <p className="mt-1 text-sm text-[color:var(--muted)]">
-                    {event.startsAt.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" })}
+                    {fmtShortDate(event.startsAt)}
                     {" · "}{event._count.registrations} registrations
                   </p>
                 </div>
@@ -167,7 +168,7 @@ export default async function AdminClubPage({
                   {member.email ?? member.phone ?? "No contact"}
                 </p>
                 <p className="mt-0.5 text-xs text-[color:var(--muted)]">
-                  Joined {member.createdAt.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" })}
+                  Joined {fmtShortDate(member.createdAt)}
                 </p>
               </div>
             ))}

@@ -7,6 +7,7 @@ import {
   setAdminEventStatus,
 } from "./actions";
 import Link from "next/link";
+import { fmtShortDate } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -82,7 +83,7 @@ export default async function Admin() {
                   <p className="break-words font-black">{club.name}</p>
                   <p className="text-sm text-[color:var(--muted)]">{club.contact}</p>
                   <p className="mt-0.5 text-xs text-[color:var(--muted)]">
-                    Applied {club.createdAt.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" })}
+                    Applied {fmtShortDate(club.createdAt)}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -191,7 +192,7 @@ export default async function Admin() {
                     )}
                   </div>
                   <p className="mt-1 text-sm text-[color:var(--muted)]">
-                    {event.club.name} · {event.startsAt.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" })}
+                    {event.club.name} · {fmtShortDate(event.startsAt)}
                     {" · "}{event._count.registrations} reg.
                   </p>
                 </div>

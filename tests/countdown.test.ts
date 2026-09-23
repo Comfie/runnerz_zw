@@ -5,15 +5,19 @@ describe("getCountdownLabel", () => {
   const now = new Date("2026-07-07T12:00:00.000Z")
 
   it("returns null for a past event", () => {
-    expect(getCountdownLabel(new Date("2026-07-06T23:59:59.000Z"), now)).toBeNull()
+    expect(getCountdownLabel(new Date("2026-07-06T21:59:59.000Z"), now)).toBeNull()
   })
 
   it("returns 'Today!' for an event earlier today", () => {
     expect(getCountdownLabel(new Date("2026-07-07T06:00:00.000Z"), now)).toBe("Today!")
   })
 
-  it("returns 'Today!' for an event later today", () => {
-    expect(getCountdownLabel(new Date("2026-07-07T22:00:00.000Z"), now)).toBe("Today!")
+  it("returns 'Today!' for an event late tonight in Harare", () => {
+    expect(getCountdownLabel(new Date("2026-07-07T21:00:00.000Z"), now)).toBe("Today!")
+  })
+
+  it("uses the Harare calendar day, not the UTC day", () => {
+    expect(getCountdownLabel(new Date("2026-07-07T22:30:00.000Z"), now)).toBe("Tomorrow")
   })
 
   it("returns 'Tomorrow' for 1 day away", () => {

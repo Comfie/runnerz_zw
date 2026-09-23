@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import type { EventType } from "@prisma/client"
+import { fmtDate } from "@/lib/format"
 
 const EVENT_TYPE_LABEL: Record<string, string> = {
   ROAD: "Road",
@@ -29,7 +30,7 @@ export function HeroUpcomingCard({ events }: { events: UpcomingEvent[] }) {
   return (
     <div className="hidden lg:block lg:w-80 xl:w-96">
       <p className="mb-3 text-xs font-bold uppercase tracking-wide text-white/85">
-        Upcoming event.
+        Next up
       </p>
       <div className="overflow-hidden rounded-[1.5rem] bg-white shadow-[var(--shadow-soft)]">
         {events.map((event, index) => {
@@ -60,7 +61,7 @@ export function HeroUpcomingCard({ events }: { events: UpcomingEvent[] }) {
                         {" · "}
                       </span>
                     )}
-                    {event.startsAt.toLocaleDateString("en", {
+                    {fmtDate(event.startsAt, {
                       weekday: "short",
                       day: "numeric",
                       month: "short",

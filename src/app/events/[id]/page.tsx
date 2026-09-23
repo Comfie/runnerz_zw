@@ -1,9 +1,11 @@
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { getEvent } from "@/lib/events"
 import { getCountdownLabel } from "@/lib/countdown"
+import { fmtDate, fmtTime } from "@/lib/format"
 import { getRaceDayWeather } from "@/lib/weather"
 import { ShareButtons } from "@/components/ShareButtons"
 
@@ -18,11 +20,40 @@ const EVENT_TYPE_LABEL: Record<string, string> = {
   KIDS: "Kids",
 }
 
-export default async function EventPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+type Props = { params: Promise<{ id: string }> }
+
+function isUsableImage(url: string | null): url is string {
+  return Boolean(url && /^https?:\/\/|^\//.test(url))
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+  const e = await getEvent(id)
+  if (!e || e.status !== "PUBLISHED") return {}
+
+  const summary = [
+    fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "long", year: "numeric" }),
+    e.locationText,
+    e.distanceOptions.join(" / "),
+  ].join(" · ")
+  const images = isUsableImage(e.coverImageUrl) ? [e.coverImageUrl] : ["/og-default.jpg"]
+
+  return {
+    title: e.title,
+    description: summary,
+    alternates: { canonical: `/events/${e.id}` },
+    openGraph: {
+      type: "website",
+      title: e.title,
+      description: summary,
+      url: `/events/${e.id}`,
+      images,
+    },
+    twitter: { card: "summary_large_image", title: e.title, description: summary, images },
+  }
+}
+
+export default async function EventPage({ params }: Props) {
   const { id } = await params
   const e = await getEvent(id)
   if (!e || e.status !== "PUBLISHED") notFound()
@@ -36,23 +67,31 @@ export default async function EventPage({
   const isRegistrationClosed =
     isPast || (e.registrationDeadline !== null && e.registrationDeadline < now)
   const countdown = getCountdownLabel(e.startsAt)
-  const deadlineCountdown = e.registrationDeadline
-    ? getCountdownLabel(e.registrationDeadline)
-    : null
   const weather =
     e.lat !== null && e.lng !== null && !isPast
       ? await getRaceDayWeather(e.lat, e.lng, e.startsAt)
       : null
 
+  const summary = (
+    <RaceSummary
+      startsAt={e.startsAt}
+      distances={e.distanceOptions}
+      registrationDeadline={e.registrationDeadline}
+      isRegistrationClosed={isRegistrationClosed}
+      expectedRunners={e.expectedRunners}
+      hasFinisherMedal={e.hasFinisherMedal}
+    />
+  )
+
   return (
     <main className="app-container pt-5 sm:pt-8 pb-24 lg:py-8">
-      {/* Hero */}
       <section className="relative min-h-[45vh] overflow-hidden rounded-[1.75rem]">
-        {e.coverImageUrl && /^https?:\/\/|^\//.test(e.coverImageUrl) ? (
+        {isUsableImage(e.coverImageUrl) ? (
           <Image
             src={e.coverImageUrl}
             alt={e.title}
             fill
+            sizes="(min-width: 1152px) 1152px, 100vw"
             className="object-cover object-center"
             priority
           />
@@ -83,10 +122,16 @@ export default async function EventPage({
         </div>
       </section>
 
-      {/* Content */}
       <div className="mt-5 gap-5 lg:grid lg:grid-cols-[1fr_20rem]">
-        {/* Main column */}
         <div className="space-y-4">
+          <div className="surface rounded-[1.5rem] p-5 lg:hidden">
+            <p className="mb-3 text-xs font-bold uppercase text-[color:var(--green-dark)]">
+              Race at a glance
+            </p>
+            {summary}
+            <ShareButtons url={eventUrl} title={e.title} />
+          </div>
+
           <div className="surface rounded-[1.5rem] p-5 sm:p-6">
             <h2 className="text-lg font-black">About this race</h2>
             <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-[color:var(--muted)]">
@@ -142,6 +187,7 @@ export default async function EventPage({
                       src={p.url}
                       alt={p.caption ?? e.title}
                       fill
+                      sizes="(min-width: 640px) 33vw, 50vw"
                       className="object-cover"
                     />
                   </div>
@@ -178,7 +224,7 @@ export default async function EventPage({
           <div className="surface rounded-[1.5rem] p-5 sm:p-6">
             <h2 className="text-lg font-black">Organised by</h2>
             <div className="mt-3 flex items-center gap-3">
-              {e.club.logoUrl && /^https?:\/\/|^\//.test(e.club.logoUrl) && (
+              {isUsableImage(e.club.logoUrl) && (
                 <Image
                   src={e.club.logoUrl}
                   width={48}
@@ -202,103 +248,116 @@ export default async function EventPage({
           </div>
         </div>
 
-        {/* Sticky sidebar — desktop only */}
         <aside className="mt-4 hidden lg:block">
           <div className="surface sticky top-24 rounded-[1.5rem] p-5">
-            <p className="text-xs font-bold uppercase text-[color:var(--muted)]">
-              {e.startsAt.toLocaleString("en", { weekday: "long" })}
-            </p>
-            <p className="mt-1 text-2xl font-black">
-              {e.startsAt.toLocaleDateString([], {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </p>
-            <p className="text-sm text-[color:var(--muted)]">
-              {e.startsAt.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {e.distanceOptions.map((d) => (
-                <span
-                  key={d}
-                  className="rounded-full border border-[color:var(--line)] px-3 py-1 text-xs font-bold"
-                >
-                  {d}
-                </span>
-              ))}
-            </div>
-
-            {e.registrationDeadline && (
-              <div className="mt-4 text-xs text-[color:var(--muted)]">
-                {isRegistrationClosed ? (
-                  <p className="font-bold">Registration closed</p>
-                ) : (
-                  <>
-                    <p>
-                      Registration closes{" "}
-                      {e.registrationDeadline.toLocaleDateString([], {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </p>
-                    {deadlineCountdown && (
-                      <span className="mt-1 inline-flex rounded-full bg-[rgba(220,38,38,0.12)] px-2 py-0.5 text-xs font-bold text-red-700">
-                        Closes {deadlineCountdown.toLowerCase()}
-                      </span>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-
-            {e.expectedRunners !== null && (
-              <p className="mt-3 text-xs text-[color:var(--muted)]">
-                ~{e.expectedRunners.toLocaleString()} runners expected
-              </p>
-            )}
-            {e.hasFinisherMedal && (
-              <p className="mt-1 text-xs text-[color:var(--muted)]">
-                ★ Finisher medal awarded
-              </p>
-            )}
-
-            {isRegistrationClosed ? (
-              <p className="mt-5 text-center text-sm text-[color:var(--muted)]">
-                Registration closed
-              </p>
-            ) : (
-              <Link
-                href={`/register/${e.id}`}
-                className="button-primary mt-5 block w-full text-center"
-              >
-                Register
-              </Link>
-            )}
+            {summary}
+            <RegisterAction eventId={e.id} isRegistrationClosed={isRegistrationClosed} />
             <ShareButtons url={eventUrl} title={e.title} />
           </div>
         </aside>
       </div>
 
-      {/* Mobile sticky register bar */}
       <div className="fixed bottom-0 left-0 right-0 border-t border-[color:var(--line)] bg-[rgba(251,252,248,0.92)] px-4 py-3 backdrop-blur lg:hidden">
-        {isRegistrationClosed ? (
-          <p className="text-center text-sm text-[color:var(--muted)]">
-            Registration closed
-          </p>
-        ) : (
-          <Link
-            href={`/register/${e.id}`}
-            className="button-primary block w-full text-center"
-          >
-            Register
-          </Link>
-        )}
+        <RegisterAction eventId={e.id} isRegistrationClosed={isRegistrationClosed} compact />
       </div>
     </main>
+  )
+}
+
+function RaceSummary({
+  startsAt,
+  distances,
+  registrationDeadline,
+  isRegistrationClosed,
+  expectedRunners,
+  hasFinisherMedal,
+}: {
+  startsAt: Date
+  distances: string[]
+  registrationDeadline: Date | null
+  isRegistrationClosed: boolean
+  expectedRunners: number | null
+  hasFinisherMedal: boolean
+}) {
+  const deadlineCountdown = registrationDeadline
+    ? getCountdownLabel(registrationDeadline)
+    : null
+
+  return (
+    <div>
+      <p className="text-xs font-bold uppercase text-[color:var(--muted)]">
+        {fmtDate(startsAt, { weekday: "long" })}
+      </p>
+      <p className="mt-1 text-2xl font-black">
+        {fmtDate(startsAt, { day: "numeric", month: "long", year: "numeric" })}
+      </p>
+      <p className="text-sm text-[color:var(--muted)]">Start {fmtTime(startsAt)}</p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {distances.map((d) => (
+          <span
+            key={d}
+            className="rounded-full border border-[color:var(--line)] px-3 py-1 text-xs font-bold"
+          >
+            {d}
+          </span>
+        ))}
+      </div>
+
+      {registrationDeadline && (
+        <div className="mt-4 text-xs text-[color:var(--muted)]">
+          {isRegistrationClosed ? (
+            <p className="font-bold">Registration closed</p>
+          ) : (
+            <>
+              <p>
+                Registration closes{" "}
+                {fmtDate(registrationDeadline, { day: "numeric", month: "short", year: "numeric" })}
+              </p>
+              {deadlineCountdown && (
+                <span className="mt-1 inline-flex rounded-full bg-[rgba(220,38,38,0.12)] px-2 py-0.5 text-xs font-bold text-red-700">
+                  Closes {deadlineCountdown.toLowerCase()}
+                </span>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {expectedRunners !== null && (
+        <p className="mt-3 text-xs text-[color:var(--muted)]">
+          ~{expectedRunners.toLocaleString()} runners expected
+        </p>
+      )}
+      {hasFinisherMedal && (
+        <p className="mt-1 text-xs text-[color:var(--muted)]">★ Finisher medal awarded</p>
+      )}
+    </div>
+  )
+}
+
+function RegisterAction({
+  eventId,
+  isRegistrationClosed,
+  compact = false,
+}: {
+  eventId: string
+  isRegistrationClosed: boolean
+  compact?: boolean
+}) {
+  if (isRegistrationClosed) {
+    return (
+      <p className={`${compact ? "" : "mt-5 "}text-center text-sm text-[color:var(--muted)]`}>
+        Registration closed
+      </p>
+    )
+  }
+  return (
+    <Link
+      href={`/register/${eventId}`}
+      className={`button-primary ${compact ? "" : "mt-5 "}block w-full text-center`}
+    >
+      Register
+    </Link>
   )
 }

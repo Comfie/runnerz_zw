@@ -104,9 +104,21 @@ model Registration {
   event     Event              @relation(fields: [eventId], references: [id])
   distance  String
   status    RegistrationStatus @default(REGISTERED)
+  fullName         String?
+  gender           Gender?
+  dateOfBirth      DateTime?
+  emergencyName    String?
+  emergencyPhone   String?
+  tshirtSize       String?
+  waiverAcceptedAt DateTime?
   createdAt DateTime           @default(now())
 
   @@unique([userId, eventId])
+}
+
+enum Gender {
+  FEMALE
+  MALE
 }
 
 model OtpCode {

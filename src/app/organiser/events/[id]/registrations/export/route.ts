@@ -1,4 +1,4 @@
-import { toCsv } from "@/lib/csv";
+import { toCsv, toRegistrationRow } from "@/lib/csv";
 import { db } from "@/lib/db";
 import { requireOrganiser } from "@/lib/organisers";
 
@@ -9,19 +9,11 @@ export async function GET(_req: Request, ctx: RouteContext<"/organiser/events/[i
   const { id } = await ctx.params;
   const event = await db.event.findUnique({
     where: { id },
-    include: { registrations: { include: { user: true } } },
+    include: { registrations: { include: { user: true }, orderBy: { createdAt: "asc" } } },
   });
   if (!event || event.clubId !== clubId) return new Response("Not found", { status: 404 });
 
-  const csv = toCsv(
-    event.registrations.map((r) => ({
-      name: r.user.name,
-      contact: r.user.email ?? r.user.phone ?? "",
-      distance: r.distance,
-      status: r.status,
-      registeredAt: r.createdAt.toISOString().slice(0, 10),
-    })),
-  );
+  const csv = toCsv(event.registrations.map(toRegistrationRow));
   const safeName = event.title.replace(/[^\w-]+/g, "_");
 
   return new Response(csv, {

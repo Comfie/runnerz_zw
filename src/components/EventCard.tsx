@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { getCountdownLabel } from "@/lib/countdown"
+import { dateParts, fmtTime } from "@/lib/format"
 import type { EventType } from "@prisma/client"
 
 const EVENT_TYPE_LABEL: Record<string, string> = {
@@ -28,6 +29,7 @@ export function EventCard({
   }
 }) {
   const date = e.startsAt
+  const parts = dateParts(date)
   const now = new Date()
   const isPast = e.startsAt < now
   const isRegistrationClosed =
@@ -48,13 +50,13 @@ export function EventCard({
         {/* Date block */}
         <div className="rounded-2xl bg-[color:var(--foreground)] px-3 py-2 text-center text-white">
           <span className="block text-[0.6rem] font-bold uppercase leading-none text-white/65">
-            {date.toLocaleString("en", { weekday: "short" })}
+            {parts.weekday}
           </span>
           <span className="block text-xs font-bold uppercase text-white/65">
-            {date.toLocaleString("en", { month: "short" })}
+            {parts.month}
           </span>
           <span className="block text-2xl font-black leading-none">
-            {date.getDate()}
+            {parts.day}
           </span>
         </div>
 
@@ -93,7 +95,7 @@ export function EventCard({
 
       <div className="divider-dashed mt-3 flex flex-wrap items-center gap-2 pt-3">
         <span className="text-sm text-[color:var(--muted)]">
-          {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          {fmtTime(date)}
         </span>
         {/* Reserved slot for a future registered-count / capacity badge
             (e.g. "124/500") — expected-runners estimate stands in for now. */}

@@ -1,11 +1,11 @@
+import { localDayKey } from "@/lib/format"
+
+const DAY_MS = 1000 * 60 * 60 * 24
+
 export function getCountdownLabel(startsAt: Date, now = new Date()): string | null {
-  const todayUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
-  const eventUtc = Date.UTC(
-    startsAt.getUTCFullYear(),
-    startsAt.getUTCMonth(),
-    startsAt.getUTCDate(),
-  )
-  const diff = Math.round((eventUtc - todayUtc) / (1000 * 60 * 60 * 24))
+  const today = Date.parse(localDayKey(now))
+  const eventDay = Date.parse(localDayKey(startsAt))
+  const diff = Math.round((eventDay - today) / DAY_MS)
   if (diff < 0) return null
   if (diff === 0) return "Today!"
   if (diff === 1) return "Tomorrow"
